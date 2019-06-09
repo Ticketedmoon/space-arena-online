@@ -16,7 +16,8 @@ app.use(express.static(process.cwd() + '/client'));
 app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/client/index.html');
 });
- 
+
+// Anytime a player has connected, this is called.
 io.on('connection', function (socket) {
     // Log that a player has connected
     console.log(`Connected: User with socket ID (${socket.id})`);
