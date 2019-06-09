@@ -25,4 +25,6 @@ var config = {
       this.socket = io();
   }
    
-  function update() {}
+  function update() {
+    console.log("move")
+  }
