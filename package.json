@@ -1,0 +1,24 @@
+{
+  "name": "Node-RPG-Game",
+  "version": "1.0.0",
+  "description": "Building an online multiplayer NodeJS-based Role Playing Game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShaneCreedon/NodeJS-RPG-Game.git"
+  },
+  "keywords": [],
+  "author": "Shane Creedon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShaneCreedon/NodeJS-RPG-Game/issues"
+  },
+  "homepage": "https://github.com/ShaneCreedon/NodeJS-RPG-Game#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.2.0"
+  }
+}
