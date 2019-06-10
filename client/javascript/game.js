@@ -1,6 +1,6 @@
 var config = {
     type: Phaser.AUTO,
-    parent: 'phaser-example',
+    parent: 'NodeJS Phaser online game',
     width: 800,
     height: 600,
     physics: {
@@ -25,6 +25,7 @@ function preload() {
 }
    
 function create() {
+    
     // Default settings
     var self = this;
     this.socket = io();
@@ -58,9 +59,29 @@ function create() {
             }
         });
     });
+
+    this.socket.on('playerMoved', function (playerInfo) {
+        self.otherPlayers.getChildren().forEach(function (otherPlayer) {
+            if (playerInfo.playerId === otherPlayer.playerId) {
+                otherPlayer.setRotation(playerInfo.rotation);
+                otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+            }
+        });
+    });
+
+    // Initialize keyboard input with Phaser
+    this.cursors = this.input.keyboard.createCursorKeys();
 }
    
-function update() {}
+function update() {
+    // Check the ship has been instantiated
+    if (this.ship) {
+        checkForPlayerMovement(this)
+        checkForOtherPlayerMovement(this)
+        // TODO: Get screen wrap working if required.
+        // this.ship.world.wrap(this.ship);
+    }
+}
 
 // External Functions
 function addPlayer(self, playerInfo) {
@@ -92,4 +113,43 @@ function addOtherPlayer(self, playerInfo) {
     }
     otherPlayer.playerId = playerInfo.playerId;
     self.otherPlayers.add(otherPlayer);
+}
+
+function checkForPlayerMovement(self) {
+    // Check left key is down
+    if (self.cursors.left.isDown) {
+        self.ship.setAngularVelocity(-150);
+
+    // Check right key is down
+    } else if (self.cursors.right.isDown) {
+        self.ship.setAngularVelocity(150);
+
+    // Otherwise, stop velocity
+    } else {
+        self.ship.setAngularVelocity(0);
+    }
+  
+    // Check up key is down
+    if (self.cursors.up.isDown) {
+        self.physics.velocityFromRotation(self.ship.rotation - 1.5, 100, self.ship.body.acceleration);
+    } else {
+        self.ship.setAcceleration(0);
+    }
+}
+
+function checkForOtherPlayerMovement(self) {
+    // emit player movement
+    var x = self.ship.x;
+    var y = self.ship.y;
+    var r = self.ship.rotation;
+    if (self.ship.oldPosition && (x !== self.ship.oldPosition.x || y !== self.ship.oldPosition.y || r !== self.ship.oldPosition.rotation)) {
+        self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation });
+    }
+    
+    // save old position data
+    self.ship.oldPosition = {
+        x: self.ship.x,
+        y: self.ship.y,
+        rotation: self.ship.rotation
+    };  
 }
