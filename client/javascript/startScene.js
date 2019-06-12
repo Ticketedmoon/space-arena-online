@@ -8,10 +8,6 @@ export default class StartScene extends Phaser.Scene {
     }
 
     preload() {
-        // this.load.image('ship', 'assets/player.png');
-        // this.load.image('sky', 'assets/sky.png');
-        this.load.image('otherPlayer', 'assets/player.png');
-        
         this.load.path = 'assets/background/';
 
         // background animation sprites
@@ -69,7 +65,6 @@ export default class StartScene extends Phaser.Scene {
         // Update current players with new player details.
         this.socket.on('currentPlayers', function(players) {
             Object.keys(players).forEach(function (id) {
-                console.log(self);
                 if (players[id].playerId === self.socket.id) {
                     self.networkManager.addPlayer(self, players[id]);
                 }
