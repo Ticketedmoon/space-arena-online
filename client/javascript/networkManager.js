@@ -10,7 +10,7 @@ export default class NetworkManager {
     
         self.ship = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
         self.ship.body.collideWorldBounds = true;
-        self.ship.setBounce(5);
+        self.ship.setBounce(1);
 
         // Add the text to the sprite as a child, just like a group spriteText.x = spriteText.width * -0.5; 
         // Center the text sprite text.y = -10 
@@ -19,7 +19,7 @@ export default class NetworkManager {
         // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
         self.ship.setDrag(100);
         self.ship.setAngularDrag(100);
-        self.ship.setMaxVelocity(200);
+        self.ship.setMaxVelocity(500);
     }
 
     addOtherPlayer(self, playerInfo) {
@@ -53,10 +53,15 @@ export default class NetworkManager {
     
         // Check up key is down
         if (self.cursors.up.isDown) {
-            self.physics.velocityFromRotation(self.ship.rotation + 270, 150, self.ship.body.acceleration);
+            self.physics.velocityFromRotation(self.ship.rotation + 270, 50, self.ship.body.acceleration);
         } else {
             self.ship.setAcceleration(0);
             // Todo: Turn off engine
+        }
+
+        // Check for space bar push => instantiates engine thrusters 
+        if (self.cursors.space.isDown) {
+            self.physics.velocityFromRotation(self.ship.rotation + 270, 300, self.ship.body.acceleration);
         }
     }
 
