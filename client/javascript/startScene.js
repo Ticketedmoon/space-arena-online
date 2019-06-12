@@ -31,6 +31,16 @@ export default class StartScene extends Phaser.Scene {
         this.load.image('player_anim_6', 'player_5.png');
         this.load.image('player_anim_7', 'player_6.png');
         this.load.image('player_anim_8', 'player_7.png');
+
+         // Engine Thrusters animation sprites
+         this.load.image('player_boost_anim_1', 'player_0_boost.png');
+         this.load.image('player_boost_anim_2', 'player_1_boost.png');
+         this.load.image('player_boost_anim_3', 'player_2_boost.png');
+         this.load.image('player_boost_anim_4', 'player_3_boost.png');
+         this.load.image('player_boost_anim_5', 'player_4_boost.png');
+         this.load.image('player_boost_anim_6', 'player_5_boost.png');
+         this.load.image('player_boost_anim_7', 'player_6_boost.png');
+         this.load.image('player_boost_anim_8', 'player_7_boost.png');
     }
 
     create() {

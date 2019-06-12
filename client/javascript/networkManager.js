@@ -1,4 +1,8 @@
-export default class NetworkManager {    
+export default class NetworkManager {
+
+    constructor() {
+        this.boostActive = false;
+    }
 
     // External Functions
     addPlayer(self, playerInfo) {
@@ -61,7 +65,23 @@ export default class NetworkManager {
 
         // Check for space bar push => instantiates engine thrusters 
         if (self.cursors.space.isDown) {
+
+            // Increase the acceleration of the ship - Thus increasing its velocity when moving.
             self.physics.velocityFromRotation(self.ship.rotation + 270, 300, self.ship.body.acceleration);
+
+            // Update animation
+            if (!this.boostActive) {
+                self.ship.anims.stop('launch');
+                self.ship.anims.play('boost');
+                this.boostActive = true;
+            }
+        }
+        else {
+            if (this.boostActive) {
+                self.ship.anims.stop('boost');
+                self.ship.anims.play('launch');
+                this.boostActive = false;
+            }
         }
     }
 
@@ -83,6 +103,8 @@ export default class NetworkManager {
     }
 
     buildPlayerAnimationFrames(self) {
+
+        // Normal Launch Animation
         self.anims.create({
             key: 'launch',
             frames: [
@@ -94,6 +116,23 @@ export default class NetworkManager {
                 { key: 'player_anim_6' },
                 { key: 'player_anim_7' },
                 { key: 'player_anim_8', duration: 10 }
+            ],
+            frameRate: 16,
+            repeat: -1
+        });
+
+        // Engine Thruster Boost Animation
+        self.anims.create({
+            key: 'boost',
+            frames: [
+                { key: 'player_boost_anim_1' },
+                { key: 'player_boost_anim_2' },
+                { key: 'player_boost_anim_3' },
+                { key: 'player_boost_anim_4' },
+                { key: 'player_boost_anim_5' },
+                { key: 'player_boost_anim_6' },
+                { key: 'player_boost_anim_7' },
+                { key: 'player_boost_anim_8', duration: 10 }
             ],
             frameRate: 16,
             repeat: -1
