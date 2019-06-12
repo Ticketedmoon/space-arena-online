@@ -1,6 +1,7 @@
 export default class NetworkManager {
 
-    constructor() {
+    constructor(SpriteClass) {
+        this.SpriteClass = SpriteClass;
         this.boostActive = false;
     }
 
@@ -32,6 +33,7 @@ export default class NetworkManager {
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size)
         this.buildPlayerAnimationFrames(self);
+        this.SpriteClass.prototype.boostActive = self.boostActive;
 
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
         otherPlayer.playerId = playerInfo.playerId;
@@ -65,22 +67,20 @@ export default class NetworkManager {
 
         // Check for space bar push => instantiates engine thrusters 
         if (self.cursors.space.isDown) {
-
             // Increase the acceleration of the ship - Thus increasing its velocity when moving.
             self.physics.velocityFromRotation(self.ship.rotation + 270, 300, self.ship.body.acceleration);
-
             // Update animation
-            if (!this.boostActive) {
+            if (!self.boostActive) {
                 self.ship.anims.stop('launch');
                 self.ship.anims.play('boost');
-                this.boostActive = true;
+                self.boostActive = true;
             }
         }
         else {
-            if (this.boostActive) {
+            if (self.boostActive) {
                 self.ship.anims.stop('boost');
                 self.ship.anims.play('launch');
-                this.boostActive = false;
+                self.boostActive = false;
             }
         }
     }
@@ -91,15 +91,27 @@ export default class NetworkManager {
         var y = self.ship.y;
         var r = self.ship.rotation;
         if (self.ship.oldPosition && (x !== self.ship.oldPosition.x || y !== self.ship.oldPosition.y || r !== self.ship.oldPosition.rotation)) {
-            self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation });
+            self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation, boostActive: self.boostActive });
         }
         
         // save old position data
         self.ship.oldPosition = {
             x: self.ship.x,
             y: self.ship.y,
-            rotation: self.ship.rotation
+            rotation: self.ship.rotation,
+            boostActive: self.ship.boostActive
         };  
+    }
+
+    checkForThrusterInitiation(playerInfo, otherPlayer) {
+        if (playerInfo.boostActive && otherPlayer.anims.currentAnim.key == "launch") {
+            otherPlayer.anims.stop('launch');
+            otherPlayer.anims.play('boost');
+        }
+        else if (!playerInfo.boostActive && otherPlayer.anims.currentAnim.key == "boost") {
+            otherPlayer.anims.stop('boost');
+            otherPlayer.anims.play('launch');
+        }
     }
 
     buildPlayerAnimationFrames(self) {

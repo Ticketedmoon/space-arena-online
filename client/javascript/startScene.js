@@ -4,7 +4,7 @@ export default class StartScene extends Phaser.Scene {
 
     constructor() {
         super();
-        this.networkManager = new NetworkManager();
+        this.networkManager = new NetworkManager(Phaser.GameObjects.Sprite);
     }
 
     preload() {
@@ -104,6 +104,7 @@ export default class StartScene extends Phaser.Scene {
                 if (playerInfo.playerId === otherPlayer.playerId) {
                     otherPlayer.setRotation(playerInfo.rotation);
                     otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+                    self.networkManager.checkForThrusterInitiation(playerInfo, otherPlayer);
                 }
             });
         });

@@ -27,7 +27,8 @@ io.on('connection', function (socket) {
         x: Math.floor(Math.random() * 700) + 50,
         y: Math.floor(Math.random() * 500) + 50,
         playerId: socket.id,
-        team: (Math.random() > 0.5) ? 'red' : 'blue'
+        team: (Math.random() > 0.5) ? 'red' : 'blue',
+        thrustersActive: false
     };
 
     // Send the all player data to the new player
@@ -50,6 +51,7 @@ io.on('connection', function (socket) {
         players[socket.id].x = movementData.x;
         players[socket.id].y = movementData.y;
         players[socket.id].rotation = movementData.rotation;
+        players[socket.id].boostActive = movementData.boostActive
         
         // emit a message to all players about the player that moved
         socket.broadcast.emit('playerMoved', players[socket.id]);
@@ -57,5 +59,5 @@ io.on('connection', function (socket) {
 });
 
 server.listen(8080, function () {
-  console.log(`Listening on ${server.address().port}`);
+  console.log(`Game server active and Listening on ${server.address().port}`);
 });
