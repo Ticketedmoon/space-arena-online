@@ -1,0 +1,49 @@
+body {
+    background: url("../assets/resources/background-resource-forest.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.introduction, .information, .instructions {
+    margin: 0;  
+    padding: 2em;
+    text-align: center;
+    font-size: 1.4em;   
+}
+
+canvas {
+    position: relative;
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    padding: 1em;
+    bottom: 32.5em;
+
+    -webkit-box-shadow: 5px 5px 5px 0px #bc70ff, inset 4px 4px 15px 0px #bc70ff, 1px 13px 5px -24px rgba(0,0,0,0); 
+    box-shadow: 5px 5px 5px 0px #bc70ff, inset 4px 4px 15px 0px #bc70ff, 1px 13px 5px -24px rgba(0,0,0,0);
+}   
+
+h2 {    
+    font-family: 'Lobster', calibri, Arial, Helvetica, sans-serif, cursive;
+    color: rgb(233, 40, 255);
+    margin: 0;  
+    padding: 0.5em;
+    text-shadow: 2px 2px black;
+}
+
+.under-canvas {
+    position: relative;
+    top: 28em;
+    margin: 0 auto;
+    text-align: center;
+}
+
+ol, p {
+    color: white;
+    text-align: center;
+    margin: 0 auto;
+    text-shadow: 2px 2px black;
+    font-size: 1.1em;
+}
