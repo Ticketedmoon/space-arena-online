@@ -6,7 +6,7 @@ export default class Game {
         this.config = {
             type: Phaser.AUTO,
             parent: 'NodeJS Phaser online game',
-            width: 800,
+            width: 835,
             height: 600,
     
             // Physics
