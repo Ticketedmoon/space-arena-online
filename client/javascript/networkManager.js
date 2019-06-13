@@ -6,7 +6,7 @@ export default class NetworkManager {
         this.boostActive = false;
     }
 
-    // External Functions
+    // Add 'this' client as playable ship.
     addPlayer(self, playerInfo) {
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
@@ -24,8 +24,11 @@ export default class NetworkManager {
         self.ship.setMaxVelocity(500);
     }
 
+    // Create each other connected player sprite.
+    // Add name-plate text under each player.
+    // Add each player to the otherPlayers group.
+    // REFACTOR: Do we need to prototype SpriteClass?
     addOtherPlayer(self, playerInfo) {
-                
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size).
