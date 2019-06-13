@@ -70,7 +70,7 @@ export default class StartScene extends Phaser.Scene {
             repeat: -1
         });
     
-        self.sky = self.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
+        self.background = self.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
 
         // Update current players with new player details.
         this.socket.on('currentPlayers', function(players) {
@@ -95,6 +95,7 @@ export default class StartScene extends Phaser.Scene {
             self.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
+                    otherPlayer.entityText.destroy();
                 }
             });
         });
@@ -104,6 +105,7 @@ export default class StartScene extends Phaser.Scene {
                 if (playerInfo.playerId === otherPlayer.playerId) {
                     otherPlayer.setRotation(playerInfo.rotation);
                     otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+                    self.networkManager.updateNameTagLocation(otherPlayer);
                     self.networkManager.checkForThrusterInitiation(playerInfo, otherPlayer);
                 }
             });

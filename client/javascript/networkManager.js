@@ -2,6 +2,7 @@ export default class NetworkManager {
 
     constructor(SpriteClass) {
         this.SpriteClass = SpriteClass;
+        this.style = { font: "12px Calibri, Arial", fill: "lime", wordWrap: true, align: "center" };
         this.boostActive = false;
     }
 
@@ -17,10 +18,9 @@ export default class NetworkManager {
         self.ship.body.collideWorldBounds = true;
         self.ship.setBounce(1);
 
-        // Add the text to the sprite as a child, just like a group spriteText.x = spriteText.width * -0.5; 
-        // Center the text sprite text.y = -10 
-        // Position the text 10 pixels above the origin of the sprite
-
+        // Add text underneath sprite
+        self.ship.entityText = self.add.text(playerInfo.x - 60, playerInfo.y + 45, playerInfo.playerId, this.style);
+        
         // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
         self.ship.setDrag(100);
         self.ship.setAngularDrag(100);
@@ -31,17 +31,20 @@ export default class NetworkManager {
                 
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
-        // Set scale of object (object size)
+        // Set scale of object (object size).
         this.buildPlayerAnimationFrames(self);
         this.SpriteClass.prototype.boostActive = self.boostActive;
-
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
+
+        // Add text underneath sprite
+        otherPlayer.entityText = self.add.text(playerInfo.x - 60, playerInfo.y + 45, playerInfo.playerId, this.style);
+        
         otherPlayer.playerId = playerInfo.playerId;
         self.otherPlayers.add(otherPlayer);
     }
 
     /* Player Movement */
-    /* Player Shooting */
+    // REFACTOR THIS
     checkForPlayerInteraction(self) {
 
         // Check left key is down
@@ -64,6 +67,9 @@ export default class NetworkManager {
             self.ship.setAcceleration(0);
             // Todo: Turn off engine
         }
+
+        self.ship.entityText.x = self.ship.x - 60;
+        self.ship.entityText.y = self.ship.y + 45;
 
         // Check for space bar push => instantiates engine thrusters 
         if (self.cursors.space.isDown) {
@@ -112,6 +118,11 @@ export default class NetworkManager {
             otherPlayer.anims.stop('boost');
             otherPlayer.anims.play('launch');
         }
+    }
+
+    updateNameTagLocation(otherPlayer) {
+        otherPlayer.entityText.x = otherPlayer.x  - 60;;
+        otherPlayer.entityText.y = otherPlayer.y + 45;
     }
 
     buildPlayerAnimationFrames(self) {
