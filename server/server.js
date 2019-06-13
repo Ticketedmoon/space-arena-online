@@ -11,7 +11,13 @@ var io = require('socket.io').listen(server);
 // Current online players
 var players = {};
 
+console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
+app.use(express.static(process.cwd() + '/client/stylesheets'));
+app.use(express.static(process.cwd() + '/client/assets'));
+app.use(express.static(process.cwd() + '/client/assets/resources'));
+app.use(express.static(process.cwd() + '/client/assets/player'));
+app.use(express.static(process.cwd() + '/client/assets/background'));
  
 app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/client/index.html');
