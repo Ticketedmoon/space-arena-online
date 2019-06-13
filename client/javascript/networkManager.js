@@ -8,12 +8,9 @@ export default class NetworkManager {
 
     // External Functions
     addPlayer(self, playerInfo) {
-
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
-        // Set scale of object (object size)
-        this.buildPlayerAnimationFrames(self);
-    
+        // Set scale of object (object size)    
         self.ship = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
         self.ship.body.collideWorldBounds = true;
         self.ship.setBounce(1);
@@ -32,7 +29,6 @@ export default class NetworkManager {
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size).
-        this.buildPlayerAnimationFrames(self);
         this.SpriteClass.prototype.boostActive = self.boostActive;
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
 
@@ -123,42 +119,5 @@ export default class NetworkManager {
     updateNameTagLocation(otherPlayer) {
         otherPlayer.entityText.x = otherPlayer.x  - 60;;
         otherPlayer.entityText.y = otherPlayer.y + 45;
-    }
-
-    buildPlayerAnimationFrames(self) {
-
-        // Normal Launch Animation
-        self.anims.create({
-            key: 'launch',
-            frames: [
-                { key: 'player_anim_1' },
-                { key: 'player_anim_2' },
-                { key: 'player_anim_3' },
-                { key: 'player_anim_4' },
-                { key: 'player_anim_5' },
-                { key: 'player_anim_6' },
-                { key: 'player_anim_7' },
-                { key: 'player_anim_8', duration: 10 }
-            ],
-            frameRate: 16,
-            repeat: -1
-        });
-
-        // Engine Thruster Boost Animation
-        self.anims.create({
-            key: 'boost',
-            frames: [
-                { key: 'player_boost_anim_1' },
-                { key: 'player_boost_anim_2' },
-                { key: 'player_boost_anim_3' },
-                { key: 'player_boost_anim_4' },
-                { key: 'player_boost_anim_5' },
-                { key: 'player_boost_anim_6' },
-                { key: 'player_boost_anim_7' },
-                { key: 'player_boost_anim_8', duration: 10 }
-            ],
-            frameRate: 16,
-            repeat: -1
-        });
     }
 }
