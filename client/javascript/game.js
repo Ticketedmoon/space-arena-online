@@ -8,6 +8,9 @@ export default class Game {
             parent: 'NodeJS Phaser online game',
             width: 835,
             height: 600,
+            scale: {
+                autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
+            },
     
             // Physics
             physics: {

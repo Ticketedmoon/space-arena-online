@@ -13,16 +13,9 @@ body {
     font-size: 1.4em;   
 }
 
-canvas {
-    position: relative;
-    display: block;
-    text-align: center;
-    margin: 0 auto;
-    padding: 1em;
-    bottom: 32.5em;
-
-    -webkit-box-shadow: 5px 5px 5px 0px #bc70ff, inset 4px 4px 15px 0px #bc70ff, 1px 13px 5px -24px rgba(0,0,0,0); 
-    box-shadow: 5px 5px 5px 0px #bc70ff, inset 4px 4px 15px 0px #bc70ff, 1px 13px 5px -24px rgba(0,0,0,0);
+canvas {        
+    -webkit-box-shadow: 5px 5px 5px 5px #bc70ff, inset 15px 15px 15px 15px #bc70ff, 24px 24px 24px -24px rgba(0,0,0,0); 
+    box-shadow: 5px 5px 5px 5px #bc70ff, inset 15px 15px 15px 15px #bc70ff, 24px 24px 24px -24px rgba(0,0,0,0);
 }   
 
 h2 {    
@@ -34,8 +27,7 @@ h2 {
 }
 
 .under-canvas {
-    position: relative;
-    top: 28em;
+    display: block;
     margin: 0 auto;
     text-align: center;
 }
