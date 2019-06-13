@@ -1,5 +1,5 @@
 body {
-    background: url("../assets/resources/background-resource-forest.jpg") no-repeat center center fixed;
+    background: linear-gradient( rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65) ), url("../assets/resources/background-resource.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -14,13 +14,13 @@ body {
 }
 
 canvas {        
-    -webkit-box-shadow: 5px 5px 5px 5px #bc70ff, inset 15px 15px 15px 15px #bc70ff, 24px 24px 24px -24px rgba(0,0,0,0); 
-    box-shadow: 5px 5px 5px 5px #bc70ff, inset 15px 15px 15px 15px #bc70ff, 24px 24px 24px -24px rgba(0,0,0,0);
+    -moz-box-shadow:    0px 0px 5px 5px #282a2d;
+    -webkit-box-shadow: 0px 0px 5px 5px #282a2d;    
 }   
 
 h2 {    
     font-family: 'Lobster', calibri, Arial, Helvetica, sans-serif, cursive;
-    color: rgb(233, 40, 255);
+    color: lime;
     margin: 0;  
     padding: 0.5em;
     text-shadow: 2px 2px black;
@@ -37,5 +37,5 @@ ol, p {
     text-align: center;
     margin: 0 auto;
     text-shadow: 2px 2px black;
-    font-size: 1.1em;
+    font-size: 0.85em;
 }

@@ -5,7 +5,7 @@ export default class Game {
     constructor() {
         this.config = {
             type: Phaser.AUTO,
-            parent: 'NodeJS Phaser online game',
+            parent: 'phaser-canvas',
             width: 835,
             height: 600,
             scale: {
