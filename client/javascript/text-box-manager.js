@@ -58,7 +58,7 @@ export default class TextBoxManager {
                     // Focus
                     $("#text-box").focus();
                 }
-
+                
                 // Update boolean
                 self.chatInputIsVisible = !self.chatInputIsVisible;   
             }

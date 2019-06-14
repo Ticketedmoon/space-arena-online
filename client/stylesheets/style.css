@@ -56,6 +56,17 @@ canvas {
 #text-box {
     width: 14.85em;
     opacity: 0.45;
+
+    background: #F2F2F2;
+    
+    border: 1px solid #CCCCCC;
+    border-radius: 2rem;
+    outline: none;
+
+    color: #424242;
+    letter-spacing: 1px;
+    text-indent: 1rem;
+    font-size: 0.75em;
 }
 
 #text-box:focus {
