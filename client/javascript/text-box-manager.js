@@ -71,20 +71,22 @@ export default class TextBoxManager {
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
             $(".chat-log > p").first().remove();
         }
-        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
-        $( ".chat-log" ).append(styleMessage);
 
+        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
+        $(".chat-log").append(styleMessage);
         this.removeMessageAndFadeOut();
     }
 
     removeMessageAndFadeOut() {
-        setTimeout(function() {
-            $('.chat-log > p').first().fadeOut(1500);
-        }, 10000 );
+        let fadeHandle = setTimeout(function() {
+            $('.chat-log > p').first().fadeOut(3000);
+            clearTimeout(this);
+        }, 10000);
 
-        setTimeout(function() {
-            $(".chat-log > p").first().remove();
-        }, 11500 );
+        let removeHandle = setTimeout(function() {
+            $('.chat-log > p').first().remove();
+            clearTimeout(this);
+        }, 13000);
     }
 
     getRandomColour() {
