@@ -73,6 +73,18 @@ export default class TextBoxManager {
         }
         let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
         $( ".chat-log" ).append(styleMessage);
+
+        this.removeMessageAndFadeOut();
+    }
+
+    removeMessageAndFadeOut() {
+        setTimeout(function() {
+            $('.chat-log > p').first().fadeOut(1500);
+        }, 10000 );
+
+        setTimeout(function() {
+            $(".chat-log > p").first().remove();
+        }, 11500 );
     }
 
     getRandomColour() {

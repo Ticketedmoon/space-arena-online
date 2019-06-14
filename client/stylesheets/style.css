@@ -31,7 +31,6 @@ canvas {
 }
 
 .chat-container {
-    background-color:rgba(0, 0, 0, 0.2);
     position: absolute;
     bottom:40px; 
     left:25px;
@@ -64,12 +63,15 @@ canvas {
 }
 
 .chat-log {
-    /* border: 1px solid #ccc; */
-    width: 12.5em;
-    height: 5em;
+    width: 13em;
+    height: auto;
     position:absolute;
     bottom:60px; 
     left:20px;
+    word-wrap: break-word;
+    white-space: pre-line;
+    overflow: auto;
+    line-height: 1.25em;
 }
 
 h2 {    
@@ -90,6 +92,7 @@ h2 {
     font-family: calibri, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: white;
     font-size: 0.85em;
+    word-wrap: break-word;
     z-index: 60;
     opacity: 1.0;
     text-align: left;
