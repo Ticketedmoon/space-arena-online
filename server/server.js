@@ -58,9 +58,9 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
 
-    socket.on('chatUpdate', function(message) {
+    socket.on('chatUpdate', function(message, colour, playerId) {
         // Emit messages
-        io.emit('chatUpdate', message);
+        io.emit('chatUpdate', message, colour, playerId);
     });
     
 });

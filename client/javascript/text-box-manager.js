@@ -24,7 +24,7 @@ export default class TextBoxManager {
                     $(".text-box-div").css("visibility", "hidden");
 
                     // Emit message to all other client nodes
-                    socket.emit('chatUpdate', message);
+                    socket.emit('chatUpdate', message, self.colour, socket.id);
 
                 }
                 else {
@@ -66,13 +66,15 @@ export default class TextBoxManager {
         });    
     }
 
-    updateChatLog(socketId, message) {
+    updateChatLog(message, colour, playerId) {
         let totalActiveVisibleMessages = $(".chat-log").children().length;
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
             $(".chat-log > p").first().remove();
         }
-        
-        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + this.colour + "\">" + socketId + "</span>: " + message + "</p>")
+        console.log(message);
+        console.log(playerId);
+        console.log(colour);
+        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
         $( ".chat-log" ).append(styleMessage);
     }
 

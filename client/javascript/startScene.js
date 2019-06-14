@@ -55,8 +55,8 @@ export default class StartScene extends Phaser.Scene {
         });
 
         // Update new player with all other current player details.
-        this.socket.on('chatUpdate', function(message) {
-            self.textBoxManager.updateChatLog(self.socket.id, message);
+        this.socket.on('chatUpdate', function(message, colour, playerId) {
+            self.textBoxManager.updateChatLog(message, colour, playerId);
         });
 
         // Remove player from otherPlayers group if disconnect.
