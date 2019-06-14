@@ -1,9 +1,9 @@
 export default class NetworkManager {
 
-    constructor(SpriteClass) {
-        this.SpriteClass = SpriteClass;
-        this.style = { font: "12px Calibri, Arial", fill: "lime", wordWrap: true, align: "center" };
+    constructor(spriteClass) {
         this.boostActive = false;
+        this.spriteClass = spriteClass;
+        this.style = { font: "12px Calibri, Arial", fill: "lime", wordWrap: true, align: "center" };
     }
 
     // Add 'this' client as playable ship.
@@ -32,7 +32,7 @@ export default class NetworkManager {
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size).
-        this.SpriteClass.prototype.boostActive = self.boostActive;
+        this.spriteClass.prototype.boostActive = self.boostActive;
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
 
         // Add text underneath sprite
@@ -67,11 +67,12 @@ export default class NetworkManager {
             // Todo: Turn off engine
         }
 
+        // REFACTOR
         self.ship.entityText.x = self.ship.x - 60;
         self.ship.entityText.y = self.ship.y + 45;
 
         // Check for space bar push => instantiates engine thrusters 
-        if (self.cursors.space.isDown) {
+        if (self.cursors.shift.isDown) {
             // Increase the acceleration of the ship - Thus increasing its velocity when moving.
             self.physics.velocityFromRotation(self.ship.rotation + 270, 300, self.ship.body.acceleration);
             // Update animation
@@ -88,6 +89,7 @@ export default class NetworkManager {
                 self.boostActive = false;
             }
         }
+        
     }
 
     publishPlayerMovement(self) {

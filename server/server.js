@@ -57,6 +57,12 @@ io.on('connection', function (socket) {
         // emit a message to all players about the player that moved
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
+
+    socket.on('chatUpdate', function(message) {
+        // Emit messages
+        io.emit('chatUpdate', message);
+    });
+    
 });
 
 server.listen(process.env.PORT || 8080, function () {

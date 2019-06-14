@@ -1,17 +1,19 @@
 import NetworkManager from './networkManager.js';
 import ImageLoader from './imageLoader.js';
 import AnimationManager from './animationManager.js';
+import TextBoxManager from './text-box-manager.js';
 
 export default class StartScene extends Phaser.Scene {
 
     constructor() {
         super();
-        this.networkManager = new NetworkManager(Phaser.GameObjects.Sprite);
     }
 
     preload() {
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
+        this.textBoxManager = new TextBoxManager();
+        this.networkManager = new NetworkManager(Phaser.GameObjects.Sprite);
         this.imageLoader.loadAnimationImageSets(this);
     }
 
@@ -21,6 +23,10 @@ export default class StartScene extends Phaser.Scene {
         
         // Setup socket for each client
         this.socket = io();
+
+        // Register text box
+        this.textBoxManager.registerChatBox(this.socket);
+        this.textBoxManager.registerChatBoxVisibilityControls();
 
         // Phaser group - Great for performing multiple operations at the same time.
         this.otherPlayers = this.physics.add.group();
@@ -48,6 +54,10 @@ export default class StartScene extends Phaser.Scene {
             self.networkManager.addOtherPlayer(self, playerInfo);
         });
 
+        // Update new player with all other current player details.
+        this.socket.on('chatUpdate', function(message) {
+            self.textBoxManager.updateChatLog(self.socket.id, message);
+        });
 
         // Remove player from otherPlayers group if disconnect.
         this.socket.on('disconnect', function(playerId) {
@@ -71,7 +81,7 @@ export default class StartScene extends Phaser.Scene {
         });
 
         // Initialize keyboard input with Phaser
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
     }
     
     update() {
