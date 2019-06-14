@@ -71,9 +71,6 @@ export default class TextBoxManager {
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
             $(".chat-log > p").first().remove();
         }
-        console.log(message);
-        console.log(playerId);
-        console.log(colour);
         let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
         $( ".chat-log" ).append(styleMessage);
     }
