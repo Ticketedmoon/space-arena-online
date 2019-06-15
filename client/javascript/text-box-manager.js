@@ -3,7 +3,6 @@ export default class TextBoxManager {
     constructor() {
         this.chatInputIsVisible = false;
         this.chatLogLimit = 5;
-        this.colour = this.getRandomColour();
     }
 
     registerChatBox(socket) {
@@ -23,7 +22,7 @@ export default class TextBoxManager {
                     $(".text-box-div").css("visibility", "hidden");
 
                     // Emit message to all other client nodes
-                    socket.emit('chatUpdate', message, self.colour, socket.id);
+                    socket.emit('chatUpdate', message, socket.id);
 
                 }
                 else {
@@ -86,14 +85,5 @@ export default class TextBoxManager {
             $('.chat-log > p').first().remove();
             clearTimeout(this);
         }, 13000);
-    }
-
-    getRandomColour() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
     }
 }

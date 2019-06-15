@@ -26,9 +26,10 @@ io.on('connection', function (socket) {
     players[socket.id] = {
         name: "",
         rotation: 0,
+        playerId: socket.id,
+        colour: getRandomColour(),
         x: Math.floor(Math.random() * 700) + 50,
         y: Math.floor(Math.random() * 500) + 50,
-        playerId: socket.id,
         team: (Math.random() > 0.5) ? 'red' : 'blue',
         thrustersActive: false
     };
@@ -63,10 +64,20 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
 
-    socket.on('chatUpdate', function(message, colour, playerId) {
+    socket.on('chatUpdate', function(message, playerId) {
         // Emit messages
-        io.emit('chatUpdate', message, colour, players[playerId].name);
+        io.emit('chatUpdate', message, players[playerId].colour, players[playerId].name);
     });
+
+    // Get random colour per player
+    function getRandomColour() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
     
 });
 
