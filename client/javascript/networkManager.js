@@ -10,7 +10,7 @@ export default class NetworkManager {
 
     // Add 'this' client as playable ship.
     addPlayer(self, playerInfo) {
-        // Use physics object to enable arcade physics with our ship.
+        // Use physics object to enable arcade physics with our ship.   
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size)    
         self.ship = self.physics.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
@@ -47,7 +47,7 @@ export default class NetworkManager {
     }
 
     /* Player Movement */
-    // REFACTOR THIS
+    // TODO: REFACTOR THIS
     checkForPlayerInteraction(self) {
 
         // Check left key is down
@@ -93,7 +93,15 @@ export default class NetworkManager {
                 self.boostActive = false;
             }
         }
-        
+    }
+
+    // Check for bullet fire by pressing the 'x' key
+    // This function is automatically called after each 'x' key press.
+    // TODO: Fire projectile functionality + Collision Detection!
+    fire(scene) {
+        let sprite = scene.add.sprite(scene.ship.x, scene.ship.y, 'player_laser_shoot_1').setOrigin(0, 0).setDisplaySize(20, 20);
+        console.log(scene);
+        console.log("Laser Shot");
     }
 
     publishPlayerMovement(self) {

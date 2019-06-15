@@ -22,6 +22,7 @@ export default class GameScene extends Phaser.Scene {
         this.imageLoader.loadAnimationImageSets(this);
     }
 
+    // TODO: Refactor ship into its own class.
     create() {
         // Store this keyword for later callbacks.
         var self = this;
@@ -86,8 +87,14 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        // Initialize keyboard input with Phaser
+        // Initialize keyboard input with Phaser - Does not work with letter keys
         this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
+
+        // Initialize Letter keys with Phaser
+        this.input.keyboard.on('keydown_X', function(event) {
+            self.networkManager.fire(self);
+        });
+
     }
     
     update() {

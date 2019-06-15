@@ -4,6 +4,7 @@ export default class ImageLoader {
         this.loadBackgroundAnimationImageSet(self);
         this.loadLaunchAnimationImageSet(self);
         this.loadBoostAnimationImageSet(self);
+        this.loadLaserImageSet(self);
     }
 
     loadBackgroundAnimationImageSet(self) {
@@ -46,4 +47,13 @@ export default class ImageLoader {
          self.load.image('player_boost_anim_8', 'player_7_boost.png');
     }
 
+    loadLaserImageSet(self) {
+        self.load.path = 'assets/projectiles/';
+        self.load.image('player_laser_shoot_1', 'beam_0.png');
+        self.load.image('player_laser_shoot_2', 'beam_1.png');
+        self.load.image('player_laser_shoot_3', 'beam_2.png');
+        self.load.image('player_laser_shoot_4', 'beam_3.png');
+        self.load.image('player_laser_shoot_5', 'beam_4.png');
+        self.load.image('player_laser_shoot_6', 'beam_5.png');
+    }
 }
