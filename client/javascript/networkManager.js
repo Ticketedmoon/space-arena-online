@@ -30,7 +30,7 @@ export default class NetworkManager {
     // Create each other connected player sprite.
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
-    // REFACTOR: Do we need to prototype SpriteClass?
+    // TODO: REFACTOR -- Do we need to prototype SpriteClass?
     addOtherPlayer(self, playerInfo) {
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
