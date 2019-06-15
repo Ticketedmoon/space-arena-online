@@ -10,13 +10,12 @@ export default class TextBoxManager {
         let self = this;
         $('#text-box').keypress(function(event) {
             var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13'){
+            if(keycode == '13') {
                 // Enter key has been pressed inside text-box
                 // Check if input contains text, if it does, send it to all nodes.
                 // Otherwise, close chat system - IE make it invisible.
                 let message = $(this).val();
                 if (message.length > 0) {
-
                     // Clear input of message
                     $(this).val('');
 
@@ -66,13 +65,13 @@ export default class TextBoxManager {
         });    
     }
 
-    updateChatLog(message, colour, playerId) {
+    updateChatLog(message, colour, userName) {
         let totalActiveVisibleMessages = $(".chat-log").children().length;
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
             $(".chat-log > p").first().remove();
         }
 
-        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + playerId + "</span>: " + message + "</p>")
+        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</p>")
         $(".chat-log").append(styleMessage);
         this.removeMessageAndFadeOut();
     }

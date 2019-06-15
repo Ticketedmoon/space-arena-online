@@ -1,4 +1,5 @@
-import StartScene from './startScene.js';
+import LoginScene from './loginScene.js';
+import GameScene from './gameScene.js';
 
 export default class Game {
 
@@ -8,6 +9,9 @@ export default class Game {
             parent: 'phaser-canvas',
             width: 835,
             height: 600,
+            url: "https://online-space-game-by-shane.herokuapp.com/",
+            version: "0.0.1",
+            fps: 30,
             scale: {
                 autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
             },
@@ -20,11 +24,8 @@ export default class Game {
                     gravity: { x: 0, y: 0 }
                 }
             },
-    
-            // Scenes
-            scene: [
-                StartScene
-            ]
+
+            scene: [LoginScene, GameScene],
         };
         
         this.game = new Phaser.Game(this.config);

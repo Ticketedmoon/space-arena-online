@@ -3,10 +3,15 @@ import ImageLoader from './imageLoader.js';
 import AnimationManager from './animationManager.js';
 import TextBoxManager from './text-box-manager.js';
 
-export default class StartScene extends Phaser.Scene {
+export default class GameScene extends Phaser.Scene {
 
     constructor() {
-        super();
+        super('game');
+        this.userName = null;
+    }
+
+    init(name) {
+        this.userName = name;
     }
 
     preload() {
@@ -30,12 +35,13 @@ export default class StartScene extends Phaser.Scene {
 
         // Phaser group - Great for performing multiple operations at the same time.
         this.otherPlayers = this.physics.add.group();
-    
-        // Load Animations from Animation Manager
-        this.animationManager.initializeAnimationGroup(this);
 
         // Set background
-        self.background = self.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
+        this.animationManager.initializeAnimationGroup(this);
+        this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
+
+        // Emit to server to start the socket connection to server
+        this.socket.emit('initializeSocketConnection', this.userName);
 
         // Update current players with new player details.
         this.socket.on('currentPlayers', function(players) {
@@ -54,9 +60,9 @@ export default class StartScene extends Phaser.Scene {
             self.networkManager.addOtherPlayer(self, playerInfo);
         });
 
-        // Update new player with all other current player details.
-        this.socket.on('chatUpdate', function(message, colour, playerId) {
-            self.textBoxManager.updateChatLog(message, colour, playerId);
+        // Connect user to chat
+        this.socket.on('chatUpdate', function(message, colour, userName) {
+            self.textBoxManager.updateChatLog(message, colour, userName);
         });
 
         // Remove player from otherPlayers group if disconnect.

@@ -24,6 +24,7 @@ io.on('connection', function (socket) {
     console.log(`Connected: User with socket ID (${socket.id})`);
     
     players[socket.id] = {
+        name: "",
         rotation: 0,
         x: Math.floor(Math.random() * 700) + 50,
         y: Math.floor(Math.random() * 500) + 50,
@@ -32,11 +33,15 @@ io.on('connection', function (socket) {
         thrustersActive: false
     };
 
-    // Send the all player data to the new player
-    socket.emit('currentPlayers', players);
+    socket.on('initializeSocketConnection', function(userName) {
+        players[socket.id].name = userName;
 
-    // Update all other players of the new player
-    socket.broadcast.emit('newPlayer', players[socket.id]);
+        // Send all player data to the new player
+        socket.emit('currentPlayers', players);
+
+        // Update all other players of the new player
+        socket.broadcast.emit('newPlayer', players[socket.id]);
+    });
 
     socket.on('disconnect', function () {
         // Log that a player has disconnected
@@ -60,7 +65,7 @@ io.on('connection', function (socket) {
 
     socket.on('chatUpdate', function(message, colour, playerId) {
         // Emit messages
-        io.emit('chatUpdate', message, colour, playerId);
+        io.emit('chatUpdate', message, colour, players[playerId].name);
     });
     
 });

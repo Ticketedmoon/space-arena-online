@@ -18,7 +18,6 @@ export default class ImageLoader {
         self.load.image('background_anim_6', 'background_5.png');
         self.load.image('background_anim_7', 'background_6.png');
         self.load.image('background_anim_8', 'background_7.png');
-
     }
 
     loadLaunchAnimationImageSet(self) {

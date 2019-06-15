@@ -110,6 +110,25 @@ h2 {
     padding:0.040em;
 }
 
+.login-screen-interface {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.login-text-box > input {
+    margin: 0 auto;
+}
+
+.login {
+    padding: 1em;
+}
+
 ol, p {
     color: white;
     text-align: center;

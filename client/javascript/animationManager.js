@@ -1,14 +1,14 @@
 export default class AnimationManager {
 
     initializeAnimationGroup(self) {
-        this.initializeLaunchAnimation(self);
-        this.initializeBoostAnimation(self);
-        this.initializeBackgroundAnimation(self);
+        this.backgroundAnim = this.initializeBackgroundAnimation(self);
+        this.launchAnim = this.initializeLaunchAnimation(self);
+        this.boostAnim = this.initializeBoostAnimation(self);
     }
 
     initializeLaunchAnimation(self) {
         // Normal Launch Animation
-        self.anims.create({
+        return self.anims.create({
             key: 'launch',
             frames: [
                 { key: 'player_anim_1' },
@@ -27,7 +27,7 @@ export default class AnimationManager {
 
     initializeBoostAnimation(self) {
         // Engine Thruster Boost Animation
-        self.anims.create({
+        return self.anims.create({
             key: 'boost',
             frames: [
                 { key: 'player_boost_anim_1' },
@@ -46,7 +46,7 @@ export default class AnimationManager {
 
     initializeBackgroundAnimation(self) {
          // Background Image
-         self.anims.create({
+         return self.anims.create({
             key: 'load',
             frames: [
                 { key: 'background_anim_1' },

@@ -3,7 +3,10 @@ export default class NetworkManager {
     constructor(spriteClass) {
         this.boostActive = false;
         this.spriteClass = spriteClass;
+
         this.style = { font: "12px Calibri, Arial", fill: "lime", wordWrap: true, align: "center" };
+        this.textAlignX = 20;
+        this.textAlignY = 45;
     }
 
     // Add 'this' client as playable ship.
@@ -16,7 +19,7 @@ export default class NetworkManager {
         self.ship.setBounce(1);
 
         // Add text underneath sprite
-        self.ship.entityText = self.add.text(playerInfo.x - 60, playerInfo.y + 45, playerInfo.playerId, this.style);
+        self.ship.entityText = self.add.text(playerInfo.x - this.textAlignX, playerInfo.y + this.textAlignY, playerInfo.name, this.style);
         
         // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
         self.ship.setDrag(100);
@@ -36,7 +39,7 @@ export default class NetworkManager {
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
 
         // Add text underneath sprite
-        otherPlayer.entityText = self.add.text(playerInfo.x - 60, playerInfo.y + 45, playerInfo.playerId, this.style);
+        otherPlayer.entityText = self.add.text(playerInfo.x - this.textAlignX, playerInfo.y + this.textAlignY, playerInfo.name, this.style);
         
         otherPlayer.playerId = playerInfo.playerId;
         self.otherPlayers.add(otherPlayer);
@@ -68,8 +71,8 @@ export default class NetworkManager {
         }
 
         // REFACTOR
-        self.ship.entityText.x = self.ship.x - 60;
-        self.ship.entityText.y = self.ship.y + 45;
+        self.ship.entityText.x = self.ship.x - this.textAlignX;
+        self.ship.entityText.y = self.ship.y + this.textAlignY;
 
         // Check for space bar push => instantiates engine thrusters 
         if (self.cursors.shift.isDown) {
@@ -122,7 +125,7 @@ export default class NetworkManager {
     }
 
     updateNameTagLocation(otherPlayer) {
-        otherPlayer.entityText.x = otherPlayer.x  - 60;;
-        otherPlayer.entityText.y = otherPlayer.y + 45;
+        otherPlayer.entityText.x = otherPlayer.x  - this.textAlignX;
+        otherPlayer.entityText.y = otherPlayer.y + this.textAlignY;
     }
 }
