@@ -18,7 +18,7 @@ export default class NetworkManager {
         self.ship.setBounce(1);
 
         // Add text underneath sprite
-        let style = { font: "12px Calibri, Arial", fill: playerInfo.colour, wordWrap: true, align: "center" };
+        let style = { font: "13px Calibri, Arial", fill: playerInfo.colour, wordWrap: true, align: "center", stroke: '#000000', strokeThickness: 0.5};
         self.ship.entityText = self.add.text(playerInfo.x - this.textAlignX, playerInfo.y + this.textAlignY, playerInfo.name, style);
         
         // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
@@ -39,7 +39,7 @@ export default class NetworkManager {
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
 
         // Add text underneath sprite
-        let style = { font: "12px Calibri, Arial", fill: playerInfo.colour, wordWrap: true, align: "center" };
+        let style = { font: "13px Calibri, Arial", fill: playerInfo.colour, wordWrap: true, align: "center" };
         otherPlayer.entityText = self.add.text(playerInfo.x - this.textAlignX, playerInfo.y + this.textAlignY, playerInfo.name, style);
         
         otherPlayer.playerId = playerInfo.playerId;

@@ -11,6 +11,9 @@ var io = require('socket.io').listen(server);
 // Current online players
 var players = {};
 
+// Colours
+var colours = require('./colours');
+
 console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
  
@@ -27,7 +30,7 @@ io.on('connection', function (socket) {
         name: "",
         rotation: 0,
         playerId: socket.id,
-        colour: getRandomColour(),
+        colour: colours[0].random(),
         x: Math.floor(Math.random() * 700) + 50,
         y: Math.floor(Math.random() * 500) + 50,
         team: (Math.random() > 0.5) ? 'red' : 'blue',
@@ -68,16 +71,6 @@ io.on('connection', function (socket) {
         // Emit messages
         io.emit('chatUpdate', message, players[playerId].colour, players[playerId].name);
     });
-
-    // Get random colour per player
-    function getRandomColour() {
-        var letters = '0123456789ABCDEF';
-        var color = '#';
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
     
 });
 
