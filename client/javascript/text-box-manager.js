@@ -76,14 +76,10 @@ export default class TextBoxManager {
     }
 
     removeMessageAndFadeOut() {
-        let fadeHandle = setTimeout(function() {
-            $('.chat-log > p').first().fadeOut(3000);
-            clearTimeout(this);
+        setTimeout(function() {
+            $('.chat-log > p').first().fadeOut(1000, function() {
+                $('.chat-log > p').first().remove();
+            });
         }, 10000);
-
-        let removeHandle = setTimeout(function() {
-            $('.chat-log > p').first().remove();
-            clearTimeout(this);
-        }, 13000);
     }
 }
