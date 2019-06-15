@@ -30,6 +30,7 @@ export default class LoginScene extends Phaser.Scene {
             }
             else {
                 // Display warning text specifying that a name value has not been submitted.
+                // TODO: Refactor this - Do not use alert() - perhaps display red text on screen, something better.
                 alert("Please enter a username before joining an online session.");
             }
         });
