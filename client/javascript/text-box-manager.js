@@ -3,6 +3,7 @@ export default class TextBoxManager {
     constructor() {
         this.chatInputIsVisible = false;
         this.chatLogLimit = 5;
+        this.messageNo = 1;
     }
 
     registerChatBox(socket) {
@@ -67,19 +68,22 @@ export default class TextBoxManager {
     updateChatLog(message, colour, userName) {
         let totalActiveVisibleMessages = $(".chat-log").children().length;
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
-            $(".chat-log > p").first().remove();
+            $('.message_' + (this.messageNo-5).toString()).remove();
         }
 
-        let styleMessage = $("<p class=\"message\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</p>")
+        let styleMessage = $("<p class=\"message message_" + this.messageNo + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</p>")
         $(".chat-log").append(styleMessage);
-        this.removeMessageAndFadeOut();
+        this.removeMessageAndFadeOut(this);
     }
 
-    removeMessageAndFadeOut() {
+    removeMessageAndFadeOut(self) {
+        let message = '.message_' + (self.messageNo).toString();
         setTimeout(function() {
-            $('.chat-log > p').first().fadeOut(1000, function() {
-                $('.chat-log > p').first().remove();
+            $(message).fadeOut(1000, function() {
+                $(message).remove();
+                self.messageNo--;
             });
         }, 10000);
+        self.messageNo++;
     }
 }
