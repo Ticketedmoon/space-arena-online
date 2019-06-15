@@ -1,3 +1,5 @@
+@import  url(https://fonts.googleapis.com/css?family=Montserrat);
+
 body {
     background: linear-gradient( rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65) ), url("../assets/resources/background-resource.jpg") no-repeat center center fixed;
     -webkit-background-size: cover;
@@ -110,12 +112,16 @@ h2 {
     padding:0.040em;
 }
 
+.game-title {
+    font-size: 2em;
+}
+
 .login-screen-interface {
     width: 100%;
     position: absolute;
     left: 0;
     right: 0;
-    top: 50%;
+    top: 10%;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -123,11 +129,36 @@ h2 {
 
 .login-text-box > input {
     margin: 0 auto;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
 }
 
 .login {
     padding: 1em;
 }
+
+#login-name {
+    /* each face will be 40px high */
+	line-height: 40px; height: 40px;
+    background: hsl(120, 40%, 20%);
+    background: white; outline: none; border: 0 none;
+	font: comic; text-align: left; color: hsl(120, 40%, 30%);
+	display: block; width: 25%; padding: 0 10px;
+    box-sizing: border-box;
+    color: green;
+    font-family: 'Roboto', 'calibri', Arial, Helvetica, sans-serif, monospace;
+    font-weight: bold;
+    font-size: 0.95em;
+    padding: 3px 0 0 20px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-family: 'Roboto', 'calibri', Arial, Helvetica, sans-serif, monospace;
+    color: black;
+    font-weight: italic;
+    opacity: 0.5; /* Firefox */
+  }
 
 ol, p {
     color: white;
@@ -136,3 +167,37 @@ ol, p {
     text-shadow: 2px 2px black;
     font-size: 0.85em;
 }
+
+/* Button */
+/* Download Button  */
+.login-text-button {
+    padding-top: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#login-button {
+    width: 200px;
+    height: 40px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2.5px;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 45px;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+#login-button:hover {
+    background-color: rgb(0, 194, 23);
+    box-shadow: 0px 5px 10px rgba(21, 253, 0, 0.4);
+    color: #fff;
+    transform: translateY(-7px);
+  }
