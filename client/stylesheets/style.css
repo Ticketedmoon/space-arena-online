@@ -32,15 +32,6 @@ canvas {
     position: relative;
 }
 
-.chat-container {
-    position: absolute;
-    bottom:40px; 
-    left:25px;
-    width: 15em;
-    height: 10em;
-    display: inline-block;
-}
-
 /* User Stories / Scenarios */
 .text-box-div {
     /* Crucial - Text box div is invisible on instantiation */
@@ -75,16 +66,30 @@ canvas {
     opacity: 0.85;
 }
 
-.chat-log {
+.chat-container {
+    position: absolute;
+    bottom:40px; 
+    left:25px;
+    width: 15em;
+    height: 10em;
+    display: inline-block;
+}
+
+.chat-log-wrapper {
+    position:absolute;
     width: 13em;
     height: auto;
-    position:absolute;
     bottom:60px; 
     left:20px;
     word-wrap: break-word;
-    white-space: pre-line;
-    overflow: auto;
+    overflow-wrap: break-word;
+    overflow: hidden;
     line-height: 1.25em;
+}
+
+.chat-log {
+    position: relative;
+    max-height: 12.5em;
 }
 
 h2 {    
