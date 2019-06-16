@@ -111,13 +111,7 @@ export default class GameScene extends Phaser.Scene {
 
             // TODO: Refactor into own `laser` class - maybe have an abstract `projectile` class as well.
             // This function allows us to 'reload' effectively after the bullets go off the screen.
-            this.lasers.children.each(function(b) {
-                if (b.active) {
-                    if (b.y < 0) {
-                        b.setActive(false);
-                    }
-                }
-            }.bind(this));
+            
         }
     }
 }

@@ -101,14 +101,18 @@ export default class NetworkManager {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
         var bullet = self.lasers.get(self.ship.x, self.ship.y);
+        bullet.checkWorldBounds = true;
+        console.log(bullet.events);
+
+        console.log(bullet);
     
         // Check bullet exists
         if (bullet) {
             bullet.rotation = self.ship.rotation;
-            self.physics.velocityFromRotation(self.ship.rotation, 400, bullet.body.velocity);
+            // Add 5 to ensure the bullet spawns in-front of the ship, rather than from the ship's centre.
+            self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
             bullet.setActive(true);
             bullet.setVisible(true);
-            bullet.body.velocity.y = -200;
         }
     }
 

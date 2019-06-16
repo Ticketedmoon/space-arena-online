@@ -17,7 +17,7 @@ Colours.names = {
     11: "#ff4500",
     12: "#ff69b4",
     13: "#9370db",
-    14: "##FFFF33"
+    14: "#FFFF33"
 };
 
 // Colours random selection
