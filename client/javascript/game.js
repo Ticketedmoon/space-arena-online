@@ -25,7 +25,10 @@ export default class Game {
                 }
             },
 
-            scene: [LoginScene, GameScene],
+            scene: [
+                LoginScene, 
+                GameScene
+            ],
         };
         
         this.game = new Phaser.Game(this.config);

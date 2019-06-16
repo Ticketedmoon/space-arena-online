@@ -1,11 +1,12 @@
 export default class NetworkManager {
 
-    constructor(spriteClass) {
+    constructor(scene) {
         this.boostActive = false;
-        this.spriteClass = spriteClass;
-
         this.textAlignX = 20;
         this.textAlignY = 45;
+
+        this.windowWidth = scene.scale.width;
+        this.windowHeight = scene.scale.height;
     }
 
     // Add 'this' client as playable ship.
@@ -30,12 +31,10 @@ export default class NetworkManager {
     // Create each other connected player sprite.
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
-    // TODO: REFACTOR -- Do we need to prototype SpriteClass?
     addOtherPlayer(self, playerInfo) {
         // Use physics object to enable arcade physics with our ship.
         // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
         // Set scale of object (object size).
-        this.spriteClass.prototype.boostActive = self.boostActive;
         const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
 
         // Add text underneath sprite
@@ -98,10 +97,19 @@ export default class NetworkManager {
     // Check for bullet fire by pressing the 'x' key
     // This function is automatically called after each 'x' key press.
     // TODO: Fire projectile functionality + Collision Detection!
-    fire(scene) {
-        let sprite = scene.add.sprite(scene.ship.x, scene.ship.y, 'player_laser_shoot_1').setOrigin(0, 0).setDisplaySize(20, 20);
-        console.log(scene);
-        console.log("Laser Shot");
+    fire(self) {
+        // Get first bullet in group
+        // After X bullets depleted -> returns null, no bullets left.
+        var bullet = self.lasers.get(self.ship.x, self.ship.y);
+    
+        // Check bullet exists
+        if (bullet) {
+            bullet.rotation = self.ship.rotation;
+            self.physics.velocityFromRotation(self.ship.rotation, 400, bullet.body.velocity);
+            bullet.setActive(true);
+            bullet.setVisible(true);
+            bullet.body.velocity.y = -200;
+        }
     }
 
     publishPlayerMovement(self) {

@@ -18,7 +18,7 @@ export default class GameScene extends Phaser.Scene {
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
         this.textBoxManager = new TextBoxManager();
-        this.networkManager = new NetworkManager(Phaser.GameObjects.Sprite);
+        this.networkManager = new NetworkManager(this);
         this.imageLoader.loadAnimationImageSets(this);
     }
 
@@ -36,6 +36,12 @@ export default class GameScene extends Phaser.Scene {
 
         // Phaser group - Great for performing multiple operations at the same time.
         this.otherPlayers = this.physics.add.group();
+
+        // Lasers shot by players
+        this.lasers = this.physics.add.group({
+            defaultKey: 'player_laser_shoot_1',
+            maxSize: 10
+        });
 
         // Set background
         this.animationManager.initializeAnimationGroup(this);
@@ -102,6 +108,16 @@ export default class GameScene extends Phaser.Scene {
         if (this.ship) {
             this.networkManager.checkForPlayerInteraction(this);
             this.networkManager.publishPlayerMovement(this);
+
+            // TODO: Refactor into own `laser` class - maybe have an abstract `projectile` class as well.
+            // This function allows us to 'reload' effectively after the bullets go off the screen.
+            this.lasers.children.each(function(b) {
+                if (b.active) {
+                    if (b.y < 0) {
+                        b.setActive(false);
+                    }
+                }
+            }.bind(this));
         }
     }
 }
