@@ -100,20 +100,26 @@ export default class NetworkManager {
     fire(self) {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
-        var bullet = self.lasers.get(self.ship.x, self.ship.y);
-        bullet.checkWorldBounds = true;
-        console.log(bullet.events);
+        var bullet = self.lasers.get(self.ship.x, self.ship.y, self.lasers.uniqueSprites[Math.floor(Math.random() * self.lasers.uniqueSprites.length)]);
 
-        console.log(bullet);
-    
         // Check bullet exists
         if (bullet) {
             bullet.rotation = self.ship.rotation;
+
             // Add 5 to ensure the bullet spawns in-front of the ship, rather than from the ship's centre.
             self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
             bullet.setActive(true);
             bullet.setVisible(true);
         }
+
+        if (self.lasers.children.size >= self.lasers.maxSize) {
+            console.log("Player should to reload...");
+        }
+    }
+
+    // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
+    reload(self) {
+        self.lasers.children.clear();
     }
 
     publishPlayerMovement(self) {

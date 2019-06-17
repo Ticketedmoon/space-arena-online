@@ -38,13 +38,15 @@ export default class GameScene extends Phaser.Scene {
         this.otherPlayers = this.physics.add.group();
 
         // Lasers shot by players
-        this.lasers = this.physics.add.group({
-            defaultKey: 'player_laser_shoot_1',
-            maxSize: 10
-        });
+        this.animationManager.initializeAnimationGroup(this);
+
+        this.lasers = this.physics.add.group();
+        this.lasers.enableBody = true;
+        this.lasers.maxSize = 10;
+        this.lasers.uniqueSprites = ["player_laser_shoot_1", "player_laser_shoot_2", "player_laser_shoot_3", 
+            "player_laser_shoot_4", "player_laser_shoot_5"];
 
         // Set background
-        this.animationManager.initializeAnimationGroup(this);
         this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
 
         // Emit to server to start the socket connection to server
@@ -96,9 +98,14 @@ export default class GameScene extends Phaser.Scene {
         // Initialize keyboard input with Phaser - Does not work with letter keys
         this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
 
-        // Initialize Letter keys with Phaser
+        // Initialize Fire function @Letter keys with Phaser
         this.input.keyboard.on('keydown_X', function(event) {
             self.networkManager.fire(self);
+        });
+
+        // Initialize Reload function @Letter keys with Phaser
+        this.input.keyboard.on('keydown_R', function(event) {
+            self.networkManager.reload(self);
         });
 
     }

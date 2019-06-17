@@ -4,6 +4,7 @@ export default class AnimationManager {
         this.backgroundAnim = this.initializeBackgroundAnimation(self);
         this.launchAnim = this.initializeLaunchAnimation(self);
         this.boostAnim = this.initializeBoostAnimation(self);
+        this.bulletAnim = this.initializeBulletAnimation(self);
     }
 
     initializeLaunchAnimation(self) {
@@ -62,5 +63,21 @@ export default class AnimationManager {
             repeat: -1
         });
     }
+
+    initializeBulletAnimation(self) {
+        // Background Image
+        return self.anims.create({
+           key: 'bullet',
+           frames: [
+               { key: 'player_laser_shoot_1' },
+               { key: 'player_laser_shoot_2' },
+               { key: 'player_laser_shoot_3' },
+               { key: 'player_laser_shoot_4' },
+               { key: 'player_laser_shoot_5', duration: 10 }
+           ],
+           frameRate: 8,
+           repeat: -1
+       });
+   }
 
 }

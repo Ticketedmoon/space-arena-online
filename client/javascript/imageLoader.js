@@ -54,6 +54,5 @@ export default class ImageLoader {
         self.load.image('player_laser_shoot_3', 'beam_2.png');
         self.load.image('player_laser_shoot_4', 'beam_3.png');
         self.load.image('player_laser_shoot_5', 'beam_4.png');
-        self.load.image('player_laser_shoot_6', 'beam_5.png');
     }
 }
