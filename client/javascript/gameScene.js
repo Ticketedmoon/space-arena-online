@@ -45,6 +45,7 @@ export default class GameScene extends Phaser.Scene {
         this.lasers.maxSize = 12;
         this.lasers.ammo = 60;
         this.lasers.magazineSize = 12;
+        this.lasers.magazineLimit = Math.ceil(this.lasers.ammo / this.lasers.magazineSize) - 1;
         this.lasers.currentMagazineAmmo = this.lasers.magazineSize;
 
         this.meteorShots = this.physics.add.group();
@@ -69,13 +70,18 @@ export default class GameScene extends Phaser.Scene {
                 }
             });
 
-            // Set ammo sprite
+            // Set normal ammo sprite
+            self.lasers.ui = self.add.text(self.scale.width, self.scale.height, self.lasers.currentMagazineAmmo.toString() + "|" + 
+            self.lasers.magazineLimit.toString()).setOrigin(5, 2.5).setScale(1, 1);
+
+            // Set meteor shot ammo sprite
             self.meteorShots.ui = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_' + self.meteorShots.ammo.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
         });
 
         // Update new player with all other current player details.
         this.socket.on('newPlayer', function(playerInfo) {
             self.networkManager.addOtherPlayer(self, playerInfo);
+            self.lasers.bringToTop(self.lasers.ui);
             self.children.bringToTop(self.meteorShots.ui);
         });
 
@@ -143,5 +149,9 @@ export default class GameScene extends Phaser.Scene {
             // This function allows us to 'reload' effectively after the bullets go off the screen.
             
         }
+    }
+
+    updateBulletAmmoUi() {
+        this.lasers.ui.setText(this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString());
     }
 }

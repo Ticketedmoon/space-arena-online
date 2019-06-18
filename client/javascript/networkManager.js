@@ -125,6 +125,8 @@ export default class NetworkManager {
             if (bullet) {
                 // reduce ammo count
                 self.lasers.currentMagazineAmmo--;
+                self.lasers.ammo--;
+                self.updateBulletAmmoUi();
                 
                 // Set bullet properties
                 bullet.rotation = self.ship.rotation;
@@ -159,8 +161,9 @@ export default class NetworkManager {
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload(self) {
         if (self.lasers.ammo >= self.lasers.magazineSize) {
-            self.lasers.ammo = self.lasers.ammo - (self.lasers.magazineSize - self.lasers.currentMagazineAmmo);
+            self.lasers.magazineLimit = Math.ceil((self.lasers.ammo-12) / self.lasers.magazineSize);
             self.lasers.currentMagazineAmmo = self.lasers.magazineSize;
+            self.updateBulletAmmoUi();
             self.lasers.children.clear(true, false);
         }
         else {
