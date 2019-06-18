@@ -5,6 +5,7 @@ export default class ImageLoader {
         this.loadLaunchAnimationImageSet(self);
         this.loadBoostAnimationImageSet(self);
         this.loadLaserImageSet(self);
+        this.loadAmmoImageSet(self);
     }
 
     loadBackgroundAnimationImageSet(self) {
@@ -54,5 +55,10 @@ export default class ImageLoader {
         self.load.image('player_laser_shoot_3', 'beam_2.png');
         self.load.image('player_laser_shoot_4', 'beam_3.png');
         self.load.image('player_laser_shoot_5', 'beam_4.png');
+    }
+
+    loadAmmoImageSet(self) {
+        self.load.path = 'assets/ammo/';
+        self.load.image('ammo_full', 'ammo_full.png');
     }
 }

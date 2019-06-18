@@ -62,11 +62,15 @@ export default class GameScene extends Phaser.Scene {
                     self.networkManager.addOtherPlayer(self, players[id]);
                 }
             });
+
+            // Set ammo sprite
+            self.ammo = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_full').setOrigin(1.5, 1.25).setScale(1, 1);
         });
 
         // Update new player with all other current player details.
         this.socket.on('newPlayer', function(playerInfo) {
             self.networkManager.addOtherPlayer(self, playerInfo);
+            self.children.bringToTop(self.ammo);
         });
 
         // Connect user to chat
