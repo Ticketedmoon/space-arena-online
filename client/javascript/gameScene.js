@@ -42,10 +42,14 @@ export default class GameScene extends Phaser.Scene {
 
         this.lasers = this.physics.add.group();
         this.lasers.enableBody = true;
-        this.lasers.maxSize = 10;
-        this.lasers.uniqueSprites = ["player_laser_shoot_1", "player_laser_shoot_2", "player_laser_shoot_3", 
-            "player_laser_shoot_4", "player_laser_shoot_5"];
-        this.ammoAvailable = 10;
+        this.lasers.maxSize = 60;
+        this.lasers.ammo = 60;
+        this.lasers.magazineSize = 12;
+
+        this.meteorShots = this.physics.add.group();
+        this.meteorShots.enableBody = true;
+        this.meteorShots.maxSize = 10;
+        this.meteorShots.ammo = 10;
 
         // Set background
         this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
@@ -65,13 +69,13 @@ export default class GameScene extends Phaser.Scene {
             });
 
             // Set ammo sprite
-            self.ammo = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_' + self.ammoAvailable.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
+            self.meteorShots.ui = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_' + self.meteorShots.ammo.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
         });
 
         // Update new player with all other current player details.
         this.socket.on('newPlayer', function(playerInfo) {
             self.networkManager.addOtherPlayer(self, playerInfo);
-            self.children.bringToTop(self.ammo);
+            self.children.bringToTop(self.meteorShots.ui);
         });
 
         // Connect user to chat
@@ -103,9 +107,14 @@ export default class GameScene extends Phaser.Scene {
         // Initialize keyboard input with Phaser - Does not work with letter keys
         this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
 
+        // Initialize Meteor Strike function @Letter keys with Phaser
+        this.input.keyboard.on('keydown_C', function(event) {
+            self.networkManager.fire_meteor_shot(self);
+        });
+
         // Initialize Fire function @Letter keys with Phaser
         this.input.keyboard.on('keydown_X', function(event) {
-            self.networkManager.fire(self);
+            self.networkManager.fire_laser(self);
         });
 
         // Initialize Reload function @Letter keys with Phaser

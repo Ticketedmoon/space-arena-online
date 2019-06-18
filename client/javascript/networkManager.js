@@ -97,31 +97,38 @@ export default class NetworkManager {
     // Check for bullet fire by pressing the 'x' key
     // This function is automatically called after each 'x' key press.
     // TODO: Fire projectile functionality + Collision Detection!
-    fire(self) {
+    fire_laser(self) {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
-        var bullet = self.lasers.get(self.ship.x, self.ship.y, self.lasers.uniqueSprites[Math.floor(Math.random() * self.lasers.uniqueSprites.length)]);
+        var bullet = self.lasers.get(self.ship.x, self.ship.y, "player_laser_shoot_1");
 
         // Check bullet exists
         if (bullet) {
-            self.ammoAvailable--;
-            self.ammo.setTexture("ammo_" + self.ammoAvailable.toString());
-
+            self.lasers.ammo--;
             bullet.rotation = self.ship.rotation;
             self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
             bullet.setActive(true);
             bullet.setVisible(true);
         }
+    }
 
-        if (self.lasers.children.size >= self.lasers.maxSize) {
-            console.log("Player should to reload...");
+    // Different colour
+    fire_meteor_shot(self) {
+        var meteor_projectile_bullet = self.meteorShots.get(self.ship.x, self.ship.y, "player_laser_shoot_1").setScale(3, 3);
+        if (meteor_projectile_bullet) {
+            self.meteorShots.ammo--;
+            self.meteorShots.ui.setTexture("ammo_" + self.meteorShots.ammo.toString());
+
+            meteor_projectile_bullet.rotation = self.ship.rotation;
+            self.physics.velocityFromRotation(self.ship.rotation, 600, meteor_projectile_bullet.body.velocity);
+            meteor_projectile_bullet.setActive(true);
+            meteor_projectile_bullet.setVisible(true);
         }
     }
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload(self) {
-        self.ammoAvailable = 10;
-        self.ammo.setTexture("ammo_" + self.ammoAvailable.toString());
+        self.lasers.ammo = 10;
         self.lasers.children.clear();
     }
 

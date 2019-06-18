@@ -51,10 +51,6 @@ export default class ImageLoader {
     loadLaserImageSet(self) {
         self.load.path = 'assets/projectiles/';
         self.load.image('player_laser_shoot_1', 'beam_0.png');
-        self.load.image('player_laser_shoot_2', 'beam_1.png');
-        self.load.image('player_laser_shoot_3', 'beam_2.png');
-        self.load.image('player_laser_shoot_4', 'beam_3.png');
-        self.load.image('player_laser_shoot_5', 'beam_4.png');
     }
 
     loadAmmoImageSet(self) {
