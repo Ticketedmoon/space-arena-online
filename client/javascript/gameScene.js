@@ -42,9 +42,10 @@ export default class GameScene extends Phaser.Scene {
 
         this.lasers = this.physics.add.group();
         this.lasers.enableBody = true;
-        this.lasers.maxSize = 60;
+        this.lasers.maxSize = 12;
         this.lasers.ammo = 60;
         this.lasers.magazineSize = 12;
+        this.lasers.currentMagazineAmmo = this.lasers.magazineSize;
 
         this.meteorShots = this.physics.add.group();
         this.meteorShots.enableBody = true;

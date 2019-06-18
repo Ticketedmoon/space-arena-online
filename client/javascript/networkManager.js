@@ -118,21 +118,23 @@ export default class NetworkManager {
     fire_laser(self) {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
-        var bullet = self.lasers.get(self.ship.x, self.ship.y, "player_laser_shoot_1");
+        if (self.lasers.ammo > 0) {
+            var bullet = self.lasers.get(self.ship.x, self.ship.y, "player_laser_shoot_1");
 
-        // Check bullet exists
-        if (bullet) {
-            // reduce ammo count
-            self.lasers.ammo--;
-            
-            // Set bullet properties
-            bullet.rotation = self.ship.rotation;
-            self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
-            bullet.setActive(true);
-            bullet.setVisible(true);
+            // Check bullet exists
+            if (bullet) {
+                // reduce ammo count
+                self.lasers.currentMagazineAmmo--;
+                
+                // Set bullet properties
+                bullet.rotation = self.ship.rotation;
+                self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
+                bullet.setActive(true);
+                bullet.setVisible(true);
 
-            // Emit to all other players
-            self.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
+                // Emit to all other players
+                self.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
+            }
         }
     }
 
@@ -156,8 +158,14 @@ export default class NetworkManager {
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload(self) {
-        self.lasers.ammo = 60;
-        self.lasers.children.clear();
+        if (self.lasers.ammo >= self.lasers.magazineSize) {
+            self.lasers.ammo = self.lasers.ammo - (self.lasers.magazineSize - self.lasers.currentMagazineAmmo);
+            self.lasers.currentMagazineAmmo = self.lasers.magazineSize;
+            self.lasers.children.clear(true, false);
+        }
+        else {
+            self.lasers.maxSize = self.lasers.ammo;
+        }
     }
 
     publishPlayerMovement(self) {
