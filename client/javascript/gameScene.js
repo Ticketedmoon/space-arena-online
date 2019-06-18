@@ -104,6 +104,14 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
+        this.socket.on('bulletFired', function (bulletData) {
+            self.networkManager.spawn_bullet(self, bulletData);
+        });
+
+        this.socket.on('meteorFired', function (meteorData) {
+            self.networkManager.spawn_meteor_shot(self, meteorData);
+        });
+
         // Initialize keyboard input with Phaser - Does not work with letter keys
         this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
 

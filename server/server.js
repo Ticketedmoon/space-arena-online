@@ -67,6 +67,14 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
 
+    socket.on('bulletFired', function(bulletData) {
+        socket.broadcast.emit('bulletFired', bulletData);
+    });
+
+    socket.on('meteorFired', function(meteorData) {
+        socket.broadcast.emit('meteorFired', meteorData);
+    });
+
     socket.on('chatUpdate', function(message, playerId) {
         // Emit messages
         io.emit('chatUpdate', message, players[playerId].colour, players[playerId].name);

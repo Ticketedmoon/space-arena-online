@@ -96,15 +96,19 @@ export default class NetworkManager {
 
     // Different colour
     fire_meteor_shot(self) {
-        var meteor_projectile_bullet = self.meteorShots.get(self.ship.x, self.ship.y, "player_laser_shoot_1").setScale(3, 3);
+        var meteor_projectile_bullet = self.meteorShots.get(self.ship.x, self.ship.y, "player_laser_shoot_1")
         if (meteor_projectile_bullet) {
             self.meteorShots.ammo--;
+            meteor_projectile_bullet.setScale(3, 3);
             self.meteorShots.ui.setTexture("ammo_" + self.meteorShots.ammo.toString());
 
             meteor_projectile_bullet.rotation = self.ship.rotation;
             self.physics.velocityFromRotation(self.ship.rotation, 600, meteor_projectile_bullet.body.velocity);
             meteor_projectile_bullet.setActive(true);
             meteor_projectile_bullet.setVisible(true);
+
+            // Emit to all other players
+            self.socket.emit('meteorFired', {x: meteor_projectile_bullet.x, y: meteor_projectile_bullet.y, rotation: meteor_projectile_bullet.rotation, velocity: meteor_projectile_bullet.body.velocity});
         }
     }
 
@@ -118,12 +122,36 @@ export default class NetworkManager {
 
         // Check bullet exists
         if (bullet) {
+            // reduce ammo count
             self.lasers.ammo--;
+            
+            // Set bullet properties
             bullet.rotation = self.ship.rotation;
             self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
             bullet.setActive(true);
             bullet.setVisible(true);
+
+            // Emit to all other players
+            self.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
         }
+    }
+
+    spawn_bullet(self, otherPlayerBulletData) {
+        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1");
+        bullet.rotation = otherPlayerBulletData.rotation;
+        bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
+        bullet.setActive(true);
+        bullet.setVisible(true);
+
+    }
+
+    spawn_meteor_shot(self, otherPlayerBulletData) {
+        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(3, 3);
+        bullet.rotation = otherPlayerBulletData.rotation;
+        bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
+        bullet.setActive(true);
+        bullet.setVisible(true);
+
     }
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
