@@ -94,6 +94,20 @@ export default class NetworkManager {
         }
     }
 
+    // Different colour
+    fire_meteor_shot(self) {
+        var meteor_projectile_bullet = self.meteorShots.get(self.ship.x, self.ship.y, "player_laser_shoot_1").setScale(3, 3);
+        if (meteor_projectile_bullet) {
+            self.meteorShots.ammo--;
+            self.meteorShots.ui.setTexture("ammo_" + self.meteorShots.ammo.toString());
+
+            meteor_projectile_bullet.rotation = self.ship.rotation;
+            self.physics.velocityFromRotation(self.ship.rotation, 600, meteor_projectile_bullet.body.velocity);
+            meteor_projectile_bullet.setActive(true);
+            meteor_projectile_bullet.setVisible(true);
+        }
+    }
+
     // Check for bullet fire by pressing the 'x' key
     // This function is automatically called after each 'x' key press.
     // TODO: Fire projectile functionality + Collision Detection!
@@ -112,23 +126,9 @@ export default class NetworkManager {
         }
     }
 
-    // Different colour
-    fire_meteor_shot(self) {
-        var meteor_projectile_bullet = self.meteorShots.get(self.ship.x, self.ship.y, "player_laser_shoot_1").setScale(3, 3);
-        if (meteor_projectile_bullet) {
-            self.meteorShots.ammo--;
-            self.meteorShots.ui.setTexture("ammo_" + self.meteorShots.ammo.toString());
-
-            meteor_projectile_bullet.rotation = self.ship.rotation;
-            self.physics.velocityFromRotation(self.ship.rotation, 600, meteor_projectile_bullet.body.velocity);
-            meteor_projectile_bullet.setActive(true);
-            meteor_projectile_bullet.setVisible(true);
-        }
-    }
-
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload(self) {
-        self.lasers.ammo = 10;
+        self.lasers.ammo = 60;
         self.lasers.children.clear();
     }
 
