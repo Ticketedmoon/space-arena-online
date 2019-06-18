@@ -59,6 +59,16 @@ export default class ImageLoader {
 
     loadAmmoImageSet(self) {
         self.load.path = 'assets/ammo/';
-        self.load.image('ammo_full', 'ammo_full.png');
+        self.load.image('ammo_10', 'ammo_10.png');
+        self.load.image('ammo_9', 'ammo_9.png');
+        self.load.image('ammo_8', 'ammo_8.png');
+        self.load.image('ammo_7', 'ammo_7.png');
+        self.load.image('ammo_6', 'ammo_6.png');
+        self.load.image('ammo_5', 'ammo_5.png');
+        self.load.image('ammo_4', 'ammo_4.png');
+        self.load.image('ammo_3', 'ammo_3.png');
+        self.load.image('ammo_2', 'ammo_2.png');
+        self.load.image('ammo_1', 'ammo_1.png');
+        self.load.image('ammo_0', 'ammo_0.png');
     }
 }

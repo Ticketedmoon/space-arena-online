@@ -45,6 +45,7 @@ export default class GameScene extends Phaser.Scene {
         this.lasers.maxSize = 10;
         this.lasers.uniqueSprites = ["player_laser_shoot_1", "player_laser_shoot_2", "player_laser_shoot_3", 
             "player_laser_shoot_4", "player_laser_shoot_5"];
+        this.ammoAvailable = 10;
 
         // Set background
         this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
@@ -64,7 +65,7 @@ export default class GameScene extends Phaser.Scene {
             });
 
             // Set ammo sprite
-            self.ammo = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_full').setOrigin(1.5, 1.25).setScale(1, 1);
+            self.ammo = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_' + self.ammoAvailable.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
         });
 
         // Update new player with all other current player details.

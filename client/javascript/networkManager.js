@@ -104,9 +104,10 @@ export default class NetworkManager {
 
         // Check bullet exists
         if (bullet) {
-            bullet.rotation = self.ship.rotation;
+            self.ammoAvailable--;
+            self.ammo.setTexture("ammo_" + self.ammoAvailable.toString());
 
-            // Add 5 to ensure the bullet spawns in-front of the ship, rather than from the ship's centre.
+            bullet.rotation = self.ship.rotation;
             self.physics.velocityFromRotation(self.ship.rotation, 600, bullet.body.velocity);
             bullet.setActive(true);
             bullet.setVisible(true);
@@ -119,6 +120,8 @@ export default class NetworkManager {
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload(self) {
+        self.ammoAvailable = 10;
+        self.ammo.setTexture("ammo_" + self.ammoAvailable.toString());
         self.lasers.children.clear();
     }
 
