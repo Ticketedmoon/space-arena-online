@@ -40,19 +40,6 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
-        this.lasers = this.physics.add.group();
-        this.lasers.enableBody = true;
-        this.lasers.maxSize = 12;
-        this.lasers.ammo = 60;
-        this.lasers.magazineSize = 12;
-        this.lasers.magazineLimit = Math.ceil(this.lasers.ammo / this.lasers.magazineSize) - 1;
-        this.lasers.currentMagazineAmmo = this.lasers.magazineSize;
-
-        this.meteorShots = this.physics.add.group();
-        this.meteorShots.enableBody = true;
-        this.meteorShots.maxSize = 10;
-        this.meteorShots.ammo = 10;
-
         // Set background
         this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
 
@@ -69,20 +56,11 @@ export default class GameScene extends Phaser.Scene {
                     self.networkManager.addOtherPlayer(self, players[id]);
                 }
             });
-
-            // Set normal ammo sprite
-            self.lasers.ui = self.add.text(self.scale.width, self.scale.height, self.lasers.currentMagazineAmmo.toString() + "|" + 
-            self.lasers.magazineLimit.toString()).setOrigin(5, 2.5).setScale(1, 1);
-
-            // Set meteor shot ammo sprite
-            self.meteorShots.ui = self.physics.add.sprite(self.scale.width, self.scale.height, 'ammo_' + self.meteorShots.ammo.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
         });
 
         // Update new player with all other current player details.
         this.socket.on('newPlayer', function(playerInfo) {
             self.networkManager.addOtherPlayer(self, playerInfo);
-            self.lasers.bringToTop(self.lasers.ui);
-            self.children.bringToTop(self.meteorShots.ui);
         });
 
         // Connect user to chat
@@ -103,8 +81,9 @@ export default class GameScene extends Phaser.Scene {
         this.socket.on('playerMoved', function (playerInfo) {
             self.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerInfo.playerId === otherPlayer.playerId) {
-                    otherPlayer.setRotation(playerInfo.rotation);
-                    otherPlayer.setPosition(playerInfo.x, playerInfo.y);
+                    otherPlayer.ship.rotation = playerInfo.rotation;
+                    otherPlayer.ship.x = playerInfo.x;
+                    otherPlayer.ship.y = playerInfo.y;
                     self.networkManager.updateNameTagLocation(otherPlayer);
                     self.networkManager.checkForThrusterInitiation(playerInfo, otherPlayer);
                 }
@@ -119,39 +98,28 @@ export default class GameScene extends Phaser.Scene {
             self.networkManager.spawn_meteor_shot(self, meteorData);
         });
 
-        // Initialize keyboard input with Phaser - Does not work with letter keys
-        this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
-
         // Initialize Meteor Strike function @Letter keys with Phaser
         this.input.keyboard.on('keydown_C', function(event) {
-            self.networkManager.fire_meteor_shot(self);
+            self.networkManager.ship.fire_meteor_shot(self);
         });
 
         // Initialize Fire function @Letter keys with Phaser
         this.input.keyboard.on('keydown_X', function(event) {
-            self.networkManager.fire_laser(self);
+            self.networkManager.ship.fire_laser(self);
         });
 
         // Initialize Reload function @Letter keys with Phaser
         this.input.keyboard.on('keydown_R', function(event) {
-            self.networkManager.reload(self);
+            self.networkManager.ship.reload();
         });
 
     }
-    
+
     update() {
         // Check the ship has been instantiated
-        if (this.ship) {
-            this.networkManager.checkForPlayerInteraction(this);
+        if (this.networkManager.ship) {
+            this.networkManager.ship.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
-
-            // TODO: Refactor into own `laser` class - maybe have an abstract `projectile` class as well.
-            // This function allows us to 'reload' effectively after the bullets go off the screen.
-            
         }
-    }
-
-    updateBulletAmmoUi() {
-        this.lasers.ui.setText(this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString());
     }
 }
