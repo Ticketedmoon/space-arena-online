@@ -2,15 +2,39 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, playerName, colour) {
         super(scene, x, y);
-        console.log(this);
+
+        // Text underneath ship alignment properties.
+        this.nameAlignX = 20;
+        this.nameAlignY = 45;
+
+        // Add text underneath sprite
+        let style = { font: "13px Calibri, Arial", fill: colour, wordWrap: true, align: "center", stroke: '#000000', strokeThickness: 0.5 };
+        this.entityText = scene.add.text(x - this.nameAlignX, y + this.nameAlignY, playerName, style);
 
         // Default ship properties
         this.playerName = playerName;
         this.colour = colour;
-        this.nameAlignX = 20;
-        this.nameAlignY = 45;
         this.boostActive = false;
+        this.shipWidth = 13.5;
+        this.shipHeight = 10;
 
+        // Enabling physics for this object is crucial.
+        scene.physics.world.enable(this);
+        scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
+
+        // Collision and bounce physics must be done after adding ship to scene.
+        this.body.collideWorldBounds = true;
+        this.body.setBounce(1);
+
+        // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
+        this.body.setDrag(100);
+        this.body.setAngularDrag(100);
+        this.body.setMaxVelocity(500);
+
+        this.initializeAmmunitionSystem(scene);
+    }
+
+    initializeAmmunitionSystem(scene) {
         // Default ship weaponry
         this.lasers = scene.physics.add.group();
         this.lasers.enableBody = true;
@@ -24,27 +48,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.meteorShots.enableBody = true;
         this.meteorShots.maxSize = 10;
         this.meteorShots.ammo = 10;
-
-        this.drawPlayer(scene, x, y);
-    }
-
-    // TODO: Refactor this so ship is renamed to shipSprite everywhere.
-    drawPlayer(scene, shipX, shipY) {
-        // Use physics object to enable arcade physics with our ship.   
-        // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
-        // Set scale of object (object size)
-        this.ship = scene.physics.add.sprite(shipX, shipY, 'player_anim_1').setOrigin(0.5, 0.5).setDisplaySize(80, 60).play('launch');
-        this.ship.body.collideWorldBounds = true;
-        this.ship.setBounce(1);
-
-        // Add text underneath sprite
-        let style = { font: "13px Calibri, Arial", fill: this.colour, wordWrap: true, align: "center", stroke: '#000000', strokeThickness: 0.5 };
-        this.entityText = scene.add.text(shipX - this.nameAlignX, shipY + this.nameAlignY, this.playerName, style);
-        
-        // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
-        this.ship.setDrag(100);
-        this.ship.setAngularDrag(100);
-        this.ship.setMaxVelocity(500);
     }
 
     initializeAmmunitionUserInterface(scene) {
@@ -56,59 +59,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, 'ammo_' + this.meteorShots.ammo.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
     }
 
-    initializeShipAnimation() {
-        this.setOrigin(0.5, 0.5);
-        this.setDisplaySize(80, 60);
-        this.play('launch');
-    }
-
-    // TODO : REFACTOR:
-    checkForShipMovement(scene) {
-        // Check left key is down
-        if (scene.cursors.left.isDown) {
-            this.ship.setAngularVelocity(-150);
-
-        // Check right key is down
-        } else if (scene.cursors.right.isDown) {
-            this.ship.setAngularVelocity(150);
-
-        // Otherwise, stop velocity
-        } else {
-            this.ship.setAngularVelocity(0);
-        }
-    
-        // Check up key is down
-        if (scene.cursors.up.isDown) {
-            scene.physics.velocityFromRotation(this.ship.rotation + 270, 50, this.ship.body.acceleration);
-        } else {
-            this.ship.setAcceleration(0);
-            // Todo: Turn off engine
-        }
-
-        // REFACTOR
-        this.entityText.x = this.ship.x - this.nameAlignX;
-        this.entityText.y = this.ship.y + this.nameAlignY;
-
-        // Check for space bar push => instantiates engine thrusters 
-        if (scene.cursors.shift.isDown) {
-            // Increase the acceleration of the ship - Thus increasing its velocity when moving.
-            scene.physics.velocityFromRotation(this.ship.rotation + 270, 300, this.ship.body.acceleration);
-            // Update animation
-            if (!this.boostActive) {
-                this.ship.anims.stop('launch');
-                this.ship.anims.play('boost');
-                this.boostActive = true;
-            }
-        }
-        else {
-            if (this.boostActive) {
-                this.ship.anims.stop('boost');
-                this.ship.anims.play('launch');
-                this.boostActive = false;
-            }
-        }
-    }
-
     // Check for bullet fire by pressing the 'x' key
     // This function is automatically called after each 'x' key press.
     // TODO: Fire projectile functionality + Collision Detection!
@@ -116,7 +66,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
         if (this.lasers.ammo > 0) {
-            var bullet = this.lasers.get(this.ship.x, this.ship.y, "player_laser_shoot_1");
+            var bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
 
             // Check bullet exists
             if (bullet) {
@@ -128,8 +78,8 @@ export default class Ship extends Phaser.GameObjects.Sprite {
                 this.updateBulletAmmoUi();
                 
                 // Set bullet properties
-                bullet.rotation = this.ship.rotation;
-                scene.physics.velocityFromRotation(this.ship.rotation, 600, bullet.body.velocity);
+                bullet.rotation = this.rotation;
+                scene.physics.velocityFromRotation(this.rotation, 600, bullet.body.velocity);
                 bullet.setActive(true);
                 bullet.setVisible(true);
 
@@ -141,14 +91,14 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
     // Different colour
     fire_meteor_shot(scene) {
-        var meteor_projectile_bullet = this.meteorShots.get(this.ship.x, this.ship.y, "player_laser_shoot_1")
+        var meteor_projectile_bullet = this.meteorShots.get(this.x, this.y, "player_laser_shoot_1")
         if (meteor_projectile_bullet) {
             this.meteorShots.ammo--;
             meteor_projectile_bullet.setScale(3, 3);
             this.meteorShots.ui.setTexture("ammo_" + this.meteorShots.ammo.toString());
 
-            meteor_projectile_bullet.rotation = this.ship.rotation;
-            scene.physics.velocityFromRotation(this.ship.rotation, 600, meteor_projectile_bullet.body.velocity);
+            meteor_projectile_bullet.rotation = this.rotation;
+            scene.physics.velocityFromRotation(this.rotation, 600, meteor_projectile_bullet.body.velocity);
             meteor_projectile_bullet.setActive(true);
             meteor_projectile_bullet.setVisible(true);
 

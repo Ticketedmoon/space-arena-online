@@ -80,11 +80,12 @@ export default class GameScene extends Phaser.Scene {
         this.socket.on('playerMoved', function (playerInfo) {
             self.otherPlayers.getChildren().forEach(function (otherPlayer) {
                 if (playerInfo.playerId === otherPlayer.playerId) {
-                    otherPlayer.ship.rotation = playerInfo.rotation;
-                    otherPlayer.ship.x = playerInfo.x;
-                    otherPlayer.ship.y = playerInfo.y;
+                    otherPlayer.rotation = playerInfo.rotation;
+                    otherPlayer.x = playerInfo.x;
+                    otherPlayer.y = playerInfo.y;
+                    otherPlayer.boostActive = playerInfo.boostActive;
                     self.networkManager.updateNameTagLocation(otherPlayer);
-                    self.networkManager.checkForThrusterInitiation(playerInfo, otherPlayer);
+                    self.networkManager.checkForThrusterInitiation(otherPlayer);
                 }
             });
         });
@@ -120,7 +121,7 @@ export default class GameScene extends Phaser.Scene {
     update() {
         // Check the ship has been instantiated
         if (this.networkManager.ship) {
-            this.networkManager.ship.checkForShipMovement(this);
+            this.networkManager.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
         }
     }
