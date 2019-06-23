@@ -17,8 +17,14 @@ var colours = require('./colours');
 console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
  
+// Root
 app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/client/index.html');
+});
+
+// Return info
+app.get('/information', function (req, res) {
+    res.sendFile(process.cwd() + '/client/info.html');
 });
 
 // Anytime a player has connected, this is called.

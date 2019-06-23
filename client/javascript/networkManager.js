@@ -12,6 +12,12 @@ export default class NetworkManager {
     // Create each other connected player sprite.
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
+
+    // TODO: USE KNOWLEDGE BELOW TO ADD PHYSICS TO SPRITE
+    // create the player sprite    
+    // player = this.physics.add.sprite(200, 200, 'player'); 
+    // player.setBounce(0.2); // our player will bounce from items
+    // player.setCollideWorldBounds(true); // don't go out of the map
     addOtherPlayer(self, playerInfo) {
         const otherPlayer = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour)
         otherPlayer.initializeShipAnimation();

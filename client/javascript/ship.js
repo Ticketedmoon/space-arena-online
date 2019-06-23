@@ -2,13 +2,14 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
     constructor(scene, x, y, playerName, colour) {
         super(scene, x, y);
+        console.log(this);
 
         // Default ship properties
-        this.boostActive = false;
         this.playerName = playerName;
         this.colour = colour;
         this.nameAlignX = 20;
         this.nameAlignY = 45;
+        this.boostActive = false;
 
         // Default ship weaponry
         this.lasers = scene.physics.add.group();
