@@ -7,7 +7,6 @@ export default class GameScene extends Phaser.Scene {
 
     constructor() {
         super('game');
-        this.userName = null;
     }
 
     init(name) {
@@ -18,7 +17,7 @@ export default class GameScene extends Phaser.Scene {
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
         this.textBoxManager = new TextBoxManager();
-        this.networkManager = new NetworkManager(this);
+        this.networkManager = new NetworkManager();
         this.imageLoader.loadAnimationImageSets(this);
     }
 
@@ -91,12 +90,15 @@ export default class GameScene extends Phaser.Scene {
         });
 
         this.socket.on('bulletFired', function (bulletData) {
-            self.networkManager.spawn_bullet(self, bulletData);
+            self.networkManager.spawn_projectile(self, bulletData, 1, 1);
         });
 
         this.socket.on('meteorFired', function (meteorData) {
-            self.networkManager.spawn_meteor_shot(self, meteorData);
+            self.networkManager.spawn_projectile(self, meteorData, 3, 3);
         });
+
+        // Initialize default ship cursor key inputs
+        this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
 
         // Initialize Meteor Strike function @Letter keys with Phaser
         this.input.keyboard.on('keydown_C', function(event) {

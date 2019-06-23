@@ -2,11 +2,6 @@ import Ship from './ship.js';
 
 export default class NetworkManager {
 
-    constructor(scene) {
-        this.windowWidth = scene.scale.width;
-        this.windowHeight = scene.scale.height;
-    }
-
     // Add 'this' client as playable ship.
     addPlayer(self, playerInfo) {
         this.ship = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour);
@@ -18,33 +13,23 @@ export default class NetworkManager {
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
     addOtherPlayer(self, playerInfo) {
-        // Use physics object to enable arcade physics with our ship.
-        // Set origin of the object to be the centre rather than the top left -> This allows us to rotate around the origin with ease.
-        // Set scale of object (object size).
         const otherPlayer = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour)
         otherPlayer.initializeShipAnimation();
-        
         otherPlayer.playerId = playerInfo.playerId;
         self.otherPlayers.add(otherPlayer);
     }
 
-    spawn_bullet(self, otherPlayerBulletData) {
-        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1");
+    // Method is used for other player ships when shooting.
+    // Shows different player projectiles.
+    spawn_projectile(self, otherPlayerBulletData, scaleX=1, scaleY=1) {
+        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);
         bullet.rotation = otherPlayerBulletData.rotation;
         bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
         bullet.setActive(true);
         bullet.setVisible(true);
     }
 
-    spawn_meteor_shot(self, otherPlayerBulletData) {
-        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(3, 3);
-        bullet.rotation = otherPlayerBulletData.rotation;
-        bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
-        bullet.setActive(true);
-        bullet.setVisible(true);
-
-    }
-
+    // Publishes `this` client's positional information, rotational information and boost information.
     publishPlayerMovement(self) {
         // emit player movement
         var x = this.ship.ship.x;
@@ -64,6 +49,7 @@ export default class NetworkManager {
         };  
     }
 
+    // Check if other players are boosting, if so - update their animations.
     checkForThrusterInitiation(playerInfo, otherPlayer) {
         if (playerInfo.boostActive && otherPlayer.ship.anims.currentAnim.key == "launch") {
             otherPlayer.ship.anims.stop('launch');
@@ -75,6 +61,7 @@ export default class NetworkManager {
         }
     }
 
+    // Update name tag location of each other client.
     updateNameTagLocation(otherPlayer) {
         otherPlayer.entityText.x = otherPlayer.ship.x - this.ship.nameAlignX;
         otherPlayer.entityText.y = otherPlayer.ship.y + this.ship.nameAlignY;

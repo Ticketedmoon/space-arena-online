@@ -24,9 +24,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.meteorShots.maxSize = 10;
         this.meteorShots.ammo = 10;
 
-        // Initialize default ship cursor key inputs
-        this.cursors = scene.input.keyboard.addKeys('up, down, left, right, shift');
-
         this.drawPlayer(scene, x, y);
     }
 
@@ -67,11 +64,11 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     // TODO : REFACTOR:
     checkForShipMovement(scene) {
         // Check left key is down
-        if (this.cursors.left.isDown) {
+        if (scene.cursors.left.isDown) {
             this.ship.setAngularVelocity(-150);
 
         // Check right key is down
-        } else if (this.cursors.right.isDown) {
+        } else if (scene.cursors.right.isDown) {
             this.ship.setAngularVelocity(150);
 
         // Otherwise, stop velocity
@@ -80,7 +77,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         }
     
         // Check up key is down
-        if (this.cursors.up.isDown) {
+        if (scene.cursors.up.isDown) {
             scene.physics.velocityFromRotation(this.ship.rotation + 270, 50, this.ship.body.acceleration);
         } else {
             this.ship.setAcceleration(0);
@@ -92,7 +89,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.entityText.y = this.ship.y + this.nameAlignY;
 
         // Check for space bar push => instantiates engine thrusters 
-        if (this.cursors.shift.isDown) {
+        if (scene.cursors.shift.isDown) {
             // Increase the acceleration of the ship - Thus increasing its velocity when moving.
             scene.physics.velocityFromRotation(this.ship.rotation + 270, 300, this.ship.body.acceleration);
             // Update animation
