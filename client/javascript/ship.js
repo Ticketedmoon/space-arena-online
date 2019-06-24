@@ -7,10 +7,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.nameAlignX = 20;
         this.nameAlignY = 45;
 
-        // Add text underneath sprite
-        let style = { font: "13px Calibri, Arial", fill: colour, wordWrap: true, align: "center", stroke: '#000000', strokeThickness: 0.5 };
-        this.entityText = scene.add.text(x - this.nameAlignX, y + this.nameAlignY, playerName, style);
-
         // Default ship properties
         this.playerName = playerName;
         this.colour = colour;
@@ -23,6 +19,10 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         scene.physics.world.setBounds(0, 0, 770, 540);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
 
+        // Add text underneath sprite
+        let style = { font: "13px Calibri, Arial", fill: colour, wordWrap: true, align: "center", stroke: '#000000', strokeThickness: 0.5 };
+        this.entityText = scene.add.text(x - this.nameAlignX, y + this.nameAlignY, playerName, style);
+
         // Collision and bounce physics must be done after adding ship to scene.
         this.body.setCollideWorldBounds(true);
         this.body.setBounce(1);
@@ -34,13 +34,11 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     }
 
     initializeAmmunitionSystem(scene) {
-        // Default ship weaponry
         this.lasers = scene.physics.add.group();
         this.lasers.enableBody = true;
         this.lasers.maxSize = 12;
-        this.lasers.ammo = 60;
         this.lasers.magazineSize = 12;
-        this.lasers.magazineLimit = Math.ceil(this.lasers.ammo / this.lasers.magazineSize) - 1;
+        this.lasers.magazineLimit = 4
         this.lasers.currentMagazineAmmo = this.lasers.magazineSize;
 
         this.meteorShots = scene.physics.add.group();
@@ -104,15 +102,12 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload() {
-        if (this.lasers.ammo >= this.lasers.magazineSize) {
-            this.lasers.magazineLimit = Math.ceil((this.lasers.ammo-12) / this.lasers.magazineSize);
+        if (this.lasers.currentMagazineAmmo < this.lasers.magazineSize && this.lasers.magazineLimit > 0) {
+            this.lasers.magazineLimit--;
             this.lasers.currentMagazineAmmo = this.lasers.magazineSize;            
             this.lasers.children.clear(true, false);
+            this.updateBulletAmmoUi();
         }
-        else {
-            this.lasers.maxSize = this.lasers.ammo;
-        }
-        this.updateBulletAmmoUi();
     }
     
     // This function allows us to 'reload' effectively after the bullets go off the screen.

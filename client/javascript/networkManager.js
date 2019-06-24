@@ -18,6 +18,8 @@ export default class NetworkManager {
         self.otherPlayers.add(otherPlayer);
     }
 
+    // Ship movement via keyboard input
+    // Up, Left, Right, Boost
     checkForShipMovement(scene) {
         if (scene.cursors.left.isDown) {
             // Check left key is down
@@ -26,13 +28,18 @@ export default class NetworkManager {
             // Check right key is down
             this.ship.body.setAngularVelocity(150);
         } else {
-            // Otherwise, stop velocity
+            // Otherwise, stop rotational velocity
             this.ship.body.setAngularVelocity(0);
         }
         if (scene.cursors.up.isDown) {
             // Check up key is down
             scene.physics.velocityFromRotation(this.ship.rotation + 270, 50, this.ship.body.acceleration);
-        } else {
+        } else if (scene.cursors.down.isDown) {
+            // Check down key is down
+            scene.physics.velocityFromRotation(this.ship.rotation + 270, -50, this.ship.body.acceleration);
+        }
+        else {
+            // Otherwise, stop acceleration in either direction 
             this.ship.body.setAcceleration(0);
         }
         this.updateNameTagLocation(this.ship);
