@@ -1,7 +1,10 @@
 export default class Ship extends Phaser.GameObjects.Sprite {
 
-    constructor(scene, x, y, playerName, colour) {
+    constructor(scene, socketId, x, y, playerName, colour) {
         super(scene, x, y);
+
+        // Socket connection ID
+        this.socketId = socketId;
 
         // Text underneath ship alignment properties.
         this.nameAlignX = 20;
@@ -16,7 +19,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
         // Enabling physics for this object is crucial + set world boundaries
         scene.physics.world.enable(this, Phaser.Physics.ARCADE);
-        scene.physics.world.setBounds(0, 0, 770, 540);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
 
         // Add text underneath sprite
@@ -59,14 +61,10 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
     // Check for bullet fire by pressing the 'x' key
     // This function is automatically called after each 'x' key press.
-    // TODO: Fire projectile functionality + Collision Detection!
     fire_laser(scene) {
-        // Get first bullet in group
-        // After X bullets depleted -> returns null, no bullets left.
-        var bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
-
         // Check bullet exists
-        if (bullet) {
+        if (this.lasers.currentMagazineAmmo > 0) {
+            let bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
             this.lasers.ammo--;

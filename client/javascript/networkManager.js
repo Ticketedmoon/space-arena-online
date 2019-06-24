@@ -3,8 +3,8 @@ import Ship from './ship.js';
 export default class NetworkManager {
 
     // Add 'this' client as playable ship.
-    addPlayer(self, playerInfo) {
-        this.ship = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour);
+    addPlayer(self, socketId, playerInfo) {
+        this.ship = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour);
         this.ship.initializeAmmunitionSystem(self);
         this.ship.initializeAmmunitionUserInterface(self);
     }
@@ -12,8 +12,8 @@ export default class NetworkManager {
     // Create each other connected player sprite.
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
-    addOtherPlayer(self, playerInfo) {
-        const otherPlayer = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour)
+    addOtherPlayer(self, socketId, playerInfo) {
+        const otherPlayer = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour)
         otherPlayer.playerId = playerInfo.playerId;
         self.otherPlayers.add(otherPlayer);
     }
@@ -66,6 +66,25 @@ export default class NetworkManager {
         };  
     }
 
+    checkForCollisions(scene) {
+        // Collision between ship sprites
+        scene.physics.collide(this.ship, scene.otherPlayers, function(player, otherPlayer){
+            otherPlayer.body.velocity.x = 0;
+            otherPlayer.body.velocity.y = 0;
+            scene.socket.emit('collision', {x: player.x, y: player.y, rotation: player.rotation, boostActive: player.boostActive, socketId: player.socketId}, 
+            {x: otherPlayer.x, y: otherPlayer.y, rotation: otherPlayer.rotation, boostActive: otherPlayer.boostActive, socketId: otherPlayer.socketId});
+        }, null, this);
+
+        // Collision between ship regular bullets
+        scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
+            otherPlayer.body.velocity.x = 0;
+            otherPlayer.body.velocity.y = 0;
+            otherPlayer.tint = Math.random() * 0xffffff;
+            laser.destroy();
+        }, null, this);
+
+        // Collision between ship meteor bombs
+    }
     // Method is used for other player ships when shooting.
     // Shows different player projectiles.
     spawn_projectile(self, otherPlayerBulletData, scaleX=1, scaleY=1) {

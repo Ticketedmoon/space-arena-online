@@ -49,17 +49,17 @@ export default class GameScene extends Phaser.Scene {
         this.socket.on('currentPlayers', function(players) {
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === self.socket.id) {
-                    self.networkManager.addPlayer(self, players[id]);
+                    self.networkManager.addPlayer(self, id, players[id]);
                 }
                 else {
-                    self.networkManager.addOtherPlayer(self, players[id]);
+                    self.networkManager.addOtherPlayer(self, id, players[id]);
                 }
             });
         });
 
         // Update new player with all other current player details.
-        this.socket.on('newPlayer', function(playerInfo) {
-            self.networkManager.addOtherPlayer(self, playerInfo);
+        this.socket.on('newPlayer', function(id, playerInfo) {
+            self.networkManager.addOtherPlayer(self, id, playerInfo);
         });
 
         // Connect user to chat
@@ -121,14 +121,10 @@ export default class GameScene extends Phaser.Scene {
     update() {
         // Check the ship has been instantiated
         if (this.networkManager.ship) {
+            let self = this;
             this.networkManager.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
-            this.physics.collide(this.networkManager.ship, this.otherPlayers, this.collisionDetected, null, this);
-            this.physics.collide(this.otherPlayers, this.networkManager.ship, this.collisionDetected, null, this);
+            this.networkManager.checkForCollisions(this);
         }
-    }
-
-    collisionDetected(player, otherPlayer) {
-        otherPlayer.body.setAcceleration(0);
     }
 }

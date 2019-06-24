@@ -50,7 +50,7 @@ io.on('connection', function (socket) {
         socket.emit('currentPlayers', players);
 
         // Update all other players of the new player
-        socket.broadcast.emit('newPlayer', players[socket.id]);
+        socket.broadcast.emit('newPlayer', socket.id, players[socket.id]);
     });
 
     socket.on('disconnect', function () {
@@ -71,6 +71,24 @@ io.on('connection', function (socket) {
         
         // emit a message to all players about the player that moved
         socket.broadcast.emit('playerMoved', players[socket.id]);
+    });
+
+    socket.on('collision', function(playerA, playerB) {
+        players[playerA.socketId].x = playerA.x;
+        players[playerA.socketId].y = playerA.y;
+        players[playerA.socketId].rotation = playerA.rotation;
+        players[playerA.socketId].boostActive = playerA.boostActive
+
+        // emit a message to all players about the player that moved
+        socket.broadcast.emit('playerMoved', players[playerA.socketId]);
+
+        players[playerB.socketId].x = playerB.x;
+        players[playerB.socketId].y = playerB.y;
+        players[playerB.socketId].rotation = playerB.rotation;
+        players[playerB.socketId].boostActive = playerB.boostActive
+
+        // emit a message to all players about the player that moved
+        socket.broadcast.emit('playerMoved', players[playerB.socketId]);
     });
 
     socket.on('bulletFired', function(bulletData) {
