@@ -20,18 +20,17 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
         // Enabling physics for this object is crucial.
         scene.physics.world.enable(this);
+        scene.physics.world.setBounds(0, 0, 770, 540);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
 
         // Collision and bounce physics must be done after adding ship to scene.
-        this.body.collideWorldBounds = true;
+        this.body.setCollideWorldBounds(true);
         this.body.setBounce(1);
 
         // We used setDrag, setAngularDrag, and setMaxVelocity to modify how the game object reacts to the arcade physics. 
         this.body.setDrag(100);
         this.body.setAngularDrag(100);
         this.body.setMaxVelocity(500);
-
-        this.initializeAmmunitionSystem(scene);
     }
 
     initializeAmmunitionSystem(scene) {

@@ -5,6 +5,7 @@ export default class NetworkManager {
     // Add 'this' client as playable ship.
     addPlayer(self, playerInfo) {
         this.ship = new Ship(self, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour);
+        this.ship.initializeAmmunitionSystem(self);
         this.ship.initializeAmmunitionUserInterface(self);
     }
 
@@ -37,7 +38,6 @@ export default class NetworkManager {
             scene.physics.velocityFromRotation(this.ship.rotation + 270, 50, this.ship.body.acceleration);
         } else {
             this.ship.body.setAcceleration(0);
-            // Todo: Turn off engine
         }
 
         // REFACTOR
@@ -64,16 +64,6 @@ export default class NetworkManager {
         }
     }
 
-    // Method is used for other player ships when shooting.
-    // Shows different player projectiles.
-    spawn_projectile(self, otherPlayerBulletData, scaleX=1, scaleY=1) {
-        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);
-        bullet.rotation = otherPlayerBulletData.rotation;
-        bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
-        bullet.setActive(true);
-        bullet.setVisible(true);
-    }
-
     // Publishes `this` client's positional information, rotational information and boost information.
     publishPlayerMovement(self) {
         // emit player movement
@@ -92,6 +82,16 @@ export default class NetworkManager {
             rotation: this.ship.rotation,
             boostActive: this.ship.boostActive
         };  
+    }
+
+    // Method is used for other player ships when shooting.
+    // Shows different player projectiles.
+    spawn_projectile(self, otherPlayerBulletData, scaleX=1, scaleY=1) {
+        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);
+        bullet.rotation = otherPlayerBulletData.rotation;
+        bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
+        bullet.setActive(true);
+        bullet.setVisible(true);
     }
 
     // Check if other players are boosting, if so - update their animations.

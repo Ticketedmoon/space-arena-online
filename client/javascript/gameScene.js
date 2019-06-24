@@ -21,7 +21,6 @@ export default class GameScene extends Phaser.Scene {
         this.imageLoader.loadAnimationImageSets(this);
     }
 
-    // TODO: Refactor ship into its own class.
     create() {
         // Store this keyword for later callbacks.
         var self = this;

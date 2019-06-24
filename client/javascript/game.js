@@ -10,7 +10,7 @@ export default class Game {
             width: 835,
             height: 600,
             url: "https://online-space-game-by-shane.herokuapp.com/",
-            version: "0.0.1",
+            version: "0.0.2",
             fps: 30,
             scale: {
                 autoCenter: Phaser.Scale.CENTER_HORIZONTALLY
