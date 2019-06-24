@@ -18,50 +18,25 @@ export default class NetworkManager {
         self.otherPlayers.add(otherPlayer);
     }
 
-     // TODO : REFACTOR:
-     checkForShipMovement(scene) {
-        // Check left key is down
+    checkForShipMovement(scene) {
         if (scene.cursors.left.isDown) {
+            // Check left key is down
             this.ship.body.setAngularVelocity(-150);
-
-        // Check right key is down
         } else if (scene.cursors.right.isDown) {
+            // Check right key is down
             this.ship.body.setAngularVelocity(150);
-
-        // Otherwise, stop velocity
         } else {
+            // Otherwise, stop velocity
             this.ship.body.setAngularVelocity(0);
         }
-    
-        // Check up key is down
         if (scene.cursors.up.isDown) {
+            // Check up key is down
             scene.physics.velocityFromRotation(this.ship.rotation + 270, 50, this.ship.body.acceleration);
         } else {
             this.ship.body.setAcceleration(0);
         }
-
-        // REFACTOR
-        this.ship.entityText.x = this.ship.x - this.ship.nameAlignX;
-        this.ship.entityText.y = this.ship.y + this.ship.nameAlignY;
-
-        // Check for space bar push => instantiates engine thrusters 
-        if (scene.cursors.shift.isDown) {
-            // Increase the acceleration of the ship - Thus increasing its velocity when moving.
-            scene.physics.velocityFromRotation(this.ship.rotation + 270, 300, this.ship.body.acceleration);
-            // Update animation
-            if (!this.ship.boostActive) {
-                this.ship.anims.stop('launch');
-                this.ship.anims.play('boost');
-                this.ship.boostActive = true;
-            }
-        }
-        else {
-            if (this.ship.boostActive) {
-                this.ship.anims.stop('boost');
-                this.ship.anims.play('launch');
-                this.ship.boostActive = false;
-            }
-        }
+        this.updateNameTagLocation(this.ship);
+        this.checkForPlayerBoostThrusters(scene);
     }
 
     // Publishes `this` client's positional information, rotational information and boost information.
@@ -94,8 +69,30 @@ export default class NetworkManager {
         bullet.setVisible(true);
     }
 
+    // Check for current client boosting
+    checkForPlayerBoostThrusters(scene) {
+        // Check for space bar push => instantiates engine thrusters 
+        if (scene.cursors.shift.isDown) {
+            // Increase the acceleration of the ship - Thus increasing its velocity when moving.
+            scene.physics.velocityFromRotation(this.ship.rotation + 270, 300, this.ship.body.acceleration);
+            // Update animation
+            if (!this.ship.boostActive) {
+                this.ship.anims.stop('launch');
+                this.ship.anims.play('boost');
+                this.ship.boostActive = true;
+            }
+        }
+        else {
+            if (this.ship.boostActive) {
+                this.ship.anims.stop('boost');
+                this.ship.anims.play('launch');
+                this.ship.boostActive = false;
+            }
+        }
+    }
+
     // Check if other players are boosting, if so - update their animations.
-    checkForThrusterInitiation(otherPlayer) {
+    checkForOtherPlayerBoostThrusters(otherPlayer) {
         if (otherPlayer.boostActive && otherPlayer.anims.currentAnim.key == "launch") {
             otherPlayer.anims.stop('launch');
             otherPlayer.anims.play('boost');
@@ -107,8 +104,8 @@ export default class NetworkManager {
     }
 
     // Update name tag location of each other client.
-    updateNameTagLocation(otherPlayer) {
-        otherPlayer.entityText.x = otherPlayer.x - otherPlayer.nameAlignX;
-        otherPlayer.entityText.y = otherPlayer.y + otherPlayer.nameAlignY;
+    updateNameTagLocation(player) {
+        player.entityText.x = player.x - player.nameAlignX;
+        player.entityText.y = player.y + player.nameAlignY;
     }
 }

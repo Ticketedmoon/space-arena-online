@@ -84,7 +84,7 @@ export default class GameScene extends Phaser.Scene {
                     otherPlayer.y = playerInfo.y;
                     otherPlayer.boostActive = playerInfo.boostActive;
                     self.networkManager.updateNameTagLocation(otherPlayer);
-                    self.networkManager.checkForThrusterInitiation(otherPlayer);
+                    self.networkManager.checkForOtherPlayerBoostThrusters(otherPlayer);
                 }
             });
         });

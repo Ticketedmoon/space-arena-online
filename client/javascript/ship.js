@@ -64,27 +64,23 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     fire_laser(scene) {
         // Get first bullet in group
         // After X bullets depleted -> returns null, no bullets left.
-        if (this.lasers.ammo > 0) {
-            var bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
+        var bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
 
-            // Check bullet exists
-            if (bullet) {
-                // reduce ammo count
-                this.lasers.currentMagazineAmmo--;
-                this.lasers.ammo--;
+        // Check bullet exists
+        if (bullet) {
+            // reduce ammo count
+            this.lasers.currentMagazineAmmo--;
+            this.lasers.ammo--;
+            this.updateBulletAmmoUi();
+            
+            // Set bullet properties
+            bullet.rotation = this.rotation;
+            scene.physics.velocityFromRotation(this.rotation, 600, bullet.body.velocity);
+            bullet.setActive(true);
+            bullet.setVisible(true);
 
-                // //TODO: REfactor
-                this.updateBulletAmmoUi();
-                
-                // Set bullet properties
-                bullet.rotation = this.rotation;
-                scene.physics.velocityFromRotation(this.rotation, 600, bullet.body.velocity);
-                bullet.setActive(true);
-                bullet.setVisible(true);
-
-                // Emit to all other players
-                scene.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
-            }
+            // Emit to all other players
+            scene.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
         }
     }
 
@@ -110,18 +106,15 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     reload() {
         if (this.lasers.ammo >= this.lasers.magazineSize) {
             this.lasers.magazineLimit = Math.ceil((this.lasers.ammo-12) / this.lasers.magazineSize);
-            this.lasers.currentMagazineAmmo = this.lasers.magazineSize;
-            
-            // TODO: REFACTOR
-            this.updateBulletAmmoUi();
+            this.lasers.currentMagazineAmmo = this.lasers.magazineSize;            
             this.lasers.children.clear(true, false);
         }
         else {
             this.lasers.maxSize = this.lasers.ammo;
         }
+        this.updateBulletAmmoUi();
     }
     
-    // TODO: Refactor into own `laser` class - maybe have an abstract `projectile` class as well.
     // This function allows us to 'reload' effectively after the bullets go off the screen.
     updateBulletAmmoUi() {
         this.lasers.ui.setText(this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString());
