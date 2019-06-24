@@ -15,7 +15,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.shipHeight = 10;
 
         // Enabling physics for this object is crucial + set world boundaries
-        scene.physics.world.enable(this);
+        scene.physics.world.enable(this, Phaser.Physics.ARCADE);
         scene.physics.world.setBounds(0, 0, 770, 540);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
 
@@ -24,6 +24,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.entityText = scene.add.text(x - this.nameAlignX, y + this.nameAlignY, playerName, style);
 
         // Collision and bounce physics must be done after adding ship to scene.
+        this.body.setSize(200, 200).setOffset(0, 0);
         this.body.setCollideWorldBounds(true);
         this.body.setBounce(1);
 
@@ -69,7 +70,6 @@ export default class Ship extends Phaser.GameObjects.Sprite {
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
             this.lasers.ammo--;
-            this.updateBulletAmmoUi();
             
             // Set bullet properties
             bullet.rotation = this.rotation;
@@ -79,6 +79,9 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
             // Emit to all other players
             scene.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
+
+            // Update bullet UI
+            this.updateBulletAmmoUi();
         }
     }
 

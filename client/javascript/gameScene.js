@@ -34,6 +34,7 @@ export default class GameScene extends Phaser.Scene {
 
         // Phaser group - Great for performing multiple operations at the same time.
         this.otherPlayers = this.physics.add.group();
+        this.otherPlayers.enableBody = true;
 
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
@@ -122,6 +123,12 @@ export default class GameScene extends Phaser.Scene {
         if (this.networkManager.ship) {
             this.networkManager.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
+            this.physics.collide(this.networkManager.ship, this.otherPlayers, this.collisionDetected, null, this);
+            this.physics.collide(this.otherPlayers, this.networkManager.ship, this.collisionDetected, null, this);
         }
+    }
+
+    collisionDetected(player, otherPlayer) {
+        otherPlayer.body.setAcceleration(0);
     }
 }
