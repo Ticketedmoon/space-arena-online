@@ -75,6 +75,7 @@ export default class NetworkManager {
             {x: otherPlayer.x, y: otherPlayer.y, rotation: otherPlayer.rotation, boostActive: otherPlayer.boostActive, socketId: otherPlayer.socketId});
         }, null, this);
 
+        // TODO: Fix emission across other clients about colour change and bullet.destroy()
         // Collision between ship regular bullets
         scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
             otherPlayer.body.velocity.x = 0;
