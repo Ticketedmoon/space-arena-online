@@ -18,7 +18,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.shipWidth = 13.5;
         this.shipHeight = 10;
 
-        // Enabling physics for this object is crucial.
+        // Enabling physics for this object is crucial + set world boundaries
         scene.physics.world.enable(this);
         scene.physics.world.setBounds(0, 0, 770, 540);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
