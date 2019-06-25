@@ -15,6 +15,9 @@ export default class LoginScene extends Phaser.Scene {
         let background = this.add.sprite(0, 0, 'background-image');
         background.setOrigin(0, 0);
 
+        // Show
+        $('.login-screen-interface').show();
+
         // Focus
         $("#login-name").focus();
 
@@ -38,7 +41,7 @@ export default class LoginScene extends Phaser.Scene {
         if (nameValue.length > 0) {
 
             // Remove Login UI
-            $('.login-screen-interface').remove();
+            $('.login-screen-interface').hide();
 
             // Start game scene
             self.scene.start('game', nameValue);

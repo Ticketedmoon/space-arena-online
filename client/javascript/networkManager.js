@@ -88,7 +88,25 @@ export default class NetworkManager {
             ship.body.velocity.x = 0;
             ship.body.velocity.y = 0;
             ship.tint = Math.random() * 0xffffff;
+
+            // Destroy this.ship.entityText.
+            this.ship.entityText.destroy(true);
+
+            // Destroy this.ship.
+            this.ship.destroy(true);
+            
+            // Remove ship reference.
+            this.ship = null;
+            
+            // Destroy bullet sprite for memory.
             otherPlayerBullet.destroy();
+
+            // Emit ship destroyed, remove from server played pool and remove from each client screen.
+            scene.socket.disconnect(true);
+
+            // Update scene to Game Over!
+            scene.scene.restart('game');
+
         }, null, this);
 
         // Collision between ship meteor bombs

@@ -123,7 +123,6 @@ export default class GameScene extends Phaser.Scene {
     update() {
         // Check the ship has been instantiated
         if (this.networkManager.ship) {
-            let self = this;
             this.networkManager.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
 
