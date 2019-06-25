@@ -4,7 +4,7 @@ export default class NetworkManager {
 
     // Add 'this' client as playable ship.
     addPlayer(self, socketId, playerInfo) {
-        this.ship = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour);
+        this.ship = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.rotation, playerInfo.name, playerInfo.colour);
         this.ship.initializeAmmunitionSystem(self);
         this.ship.initializeAmmunitionUserInterface(self);
     }
@@ -13,7 +13,7 @@ export default class NetworkManager {
     // Add name-plate text under each player.
     // Add each player to the otherPlayers group.
     addOtherPlayer(self, socketId, playerInfo) {
-        const otherPlayer = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.name, playerInfo.colour)
+        const otherPlayer = new Ship(self, socketId, playerInfo.x, playerInfo.y, playerInfo.rotation, playerInfo.name, playerInfo.colour)
         otherPlayer.playerId = playerInfo.playerId;
         self.otherPlayers.add(otherPlayer);
     }

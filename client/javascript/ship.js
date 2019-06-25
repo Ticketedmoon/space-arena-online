@@ -1,7 +1,8 @@
 export default class Ship extends Phaser.GameObjects.Sprite {
 
-    constructor(scene, socketId, x, y, playerName, colour) {
+    constructor(scene, socketId, x, y, rotation, playerName, colour) {
         super(scene, x, y);
+        this.rotation = rotation;
 
         // Socket connection ID
         this.socketId = socketId;
