@@ -18,6 +18,18 @@ export default class NetworkManager {
         self.otherPlayers.add(otherPlayer);
     }
 
+    // Respawn player function
+    // Find a new X and Y while keeping the same name and colour from the OG iteration.
+    // Emit new position to all other players
+    respawnPlayer(scene, name, colour, socketId) {
+        let newX = Math.floor(Math.random() * 700) + 50;
+        let newY = Math.floor(Math.random() * 500) + 50;
+        this.ship = new Ship(scene, socketId, newX, newY, 0, name, colour);
+        this.ship.initializeAmmunitionSystem(scene);
+        this.ship.initializeAmmunitionUserInterface(scene);
+        scene.socket.emit('playerMovement', { x: newX, y: newY, rotation: 0, boostActive: this.ship.boostActive });
+    }
+
     // Ship movement via keyboard input
     // Up, Left, Right, Boost
     checkForShipMovement(scene) {
@@ -66,51 +78,66 @@ export default class NetworkManager {
         };  
     }
 
+    // TODO: Big Refactor with set timeouts
     checkForCollisions(scene) {
-        // Collision between ship sprites
-        scene.physics.collide(this.ship, scene.otherPlayers, function(player, otherPlayer){
-            otherPlayer.body.velocity.x = 0;
-            otherPlayer.body.velocity.y = 0;
-            scene.socket.emit('collision', {x: player.x, y: player.y, rotation: player.rotation, boostActive: player.boostActive, socketId: player.socketId}, 
-            {x: otherPlayer.x, y: otherPlayer.y, rotation: otherPlayer.rotation, boostActive: otherPlayer.boostActive, socketId: otherPlayer.socketId});
-        }, null, this);
+        if (this.ship) {
+            let self = this;
 
-        // Collision between ship regular bullets
-        scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
-            otherPlayer.body.velocity.x = 0;
-            otherPlayer.body.velocity.y = 0;
-            otherPlayer.tint = 0xff0000;
-            laser.destroy();
-        }, null, this);
-        
-        // Collision between ship and other player bullets
-        scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet){
-            ship.body.velocity.x = 0;
-            ship.body.velocity.y = 0;
-            ship.tint = 0xff0000;
+            // Collision between ship regular lasers
+            scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
+                otherPlayer.body.velocity.x = 0;
+                otherPlayer.body.velocity.y = 0;
+                otherPlayer.tint = 0xff0000;
+                laser.destroy();
 
-            // Destroy this.ship.entityText.
-            this.ship.entityText.destroy(true);
+                setTimeout(function() {
+                    otherPlayer.clearTint();
+                }, 250)
+            }, null, this);
 
-            // Destroy this.ship.
-            this.ship.destroy(true);
+            // Collision between ship meteor bombs
+            scene.physics.collide(this.ship.meteorShots, scene.otherPlayers, function(meteorShot, otherPlayer){
+                otherPlayer.body.velocity.x = 0;
+                otherPlayer.body.velocity.y = 0;
+                otherPlayer.tint = 0xff0000;
+                meteorShot.destroy();
+
+                setTimeout(function() {
+                    otherPlayer.clearTint();
+                }, 250)
+            }, null, this);
             
-            // Remove ship reference.
-            this.ship = null;
-            
-            // Destroy bullet sprite for memory.
-            otherPlayerBullet.destroy();
+            // Collision between ship and other player bullets
+            scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet){
+                ship.body.velocity.x = 0;
+                ship.body.velocity.y = 0;
+                ship.tint = 0xff0000;
 
-            // Emit ship destroyed, remove from server played pool and remove from each client screen.
-            scene.socket.disconnect(true);
+                // Store previous player name
+                let prevName = this.ship.playerName;
+                let prevColour = this.ship.colour;
+                let prevSocketId = this.ship.colour;
 
-            // Update scene to Game Over!
-            scene.scene.restart('game');
+                // Destroy bullet sprite for memory.
+                otherPlayerBullet.destroy();
 
-        }, null, this);
-
-        // Collision between ship meteor bombs
+                setTimeout(function() {
+                    // Delete user Interface
+                    self.ship.deleteUserInterface();
+                    // Destroy this.ship.entityText.
+                    self.ship.entityText.destroy(true);
+                    // Destroy this.ship.
+                    self.ship.destroy(true);
+                    // Remove ship reference.
+                    self.ship = null;
+                    // Respawn player - Perhaps limit lives?
+                    self.respawnPlayer(scene, prevName, prevColour, prevSocketId);
+                }, 250);
+                return;
+            }, null, this);
+        }
     }
+
     // Method is used for other player ships when shooting.
     // Shows different player projectiles.
     spawn_projectile(scene, otherPlayerBulletData, scaleX=1, scaleY=1) {

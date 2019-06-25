@@ -118,4 +118,9 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     updateBulletAmmoUi() {
         this.lasers.ui.setText(this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString());
     }
+
+    deleteUserInterface() {
+        this.lasers.ui.destroy();
+        this.meteorShots.ui.destroy();
+    }
 }
