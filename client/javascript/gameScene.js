@@ -36,6 +36,8 @@ export default class GameScene extends Phaser.Scene {
         this.otherPlayers = this.physics.add.group();
         this.otherPlayers.enableBody = true;
 
+        this.otherPlayerBullets = this.add.group();
+
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
@@ -124,6 +126,8 @@ export default class GameScene extends Phaser.Scene {
             let self = this;
             this.networkManager.checkForShipMovement(this);
             this.networkManager.publishPlayerMovement(this);
+
+            // TODO: Refactor - does this NEED to be in update loop?
             this.networkManager.checkForCollisions(this);
         }
     }

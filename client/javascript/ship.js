@@ -66,6 +66,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         if (this.lasers.currentMagazineAmmo > 0) {
             // TODO: Refactor this groupness, the group isn't being used as such.
             let bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
+
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
             this.lasers.ammo--;

@@ -75,7 +75,6 @@ export default class NetworkManager {
             {x: otherPlayer.x, y: otherPlayer.y, rotation: otherPlayer.rotation, boostActive: otherPlayer.boostActive, socketId: otherPlayer.socketId});
         }, null, this);
 
-        // TODO: Fix emission across other clients about colour change and bullet.destroy()
         // Collision between ship regular bullets
         scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
             otherPlayer.body.velocity.x = 0;
@@ -83,17 +82,30 @@ export default class NetworkManager {
             otherPlayer.tint = Math.random() * 0xffffff;
             laser.destroy();
         }, null, this);
+        
+        // Collision between ship and other player bullets
+        scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet){
+            ship.body.velocity.x = 0;
+            ship.body.velocity.y = 0;
+            ship.tint = Math.random() * 0xffffff;
+            otherPlayerBullet.destroy();
+        }, null, this);
 
         // Collision between ship meteor bombs
     }
     // Method is used for other player ships when shooting.
     // Shows different player projectiles.
-    spawn_projectile(self, otherPlayerBulletData, scaleX=1, scaleY=1) {
-        let bullet = self.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);
+    spawn_projectile(scene, otherPlayerBulletData, scaleX=1, scaleY=1) {
+        let bullet = scene.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);        
+        bullet.checkWorldBounds = true;
+        bullet.outOfBoundsKill = true;
+
         bullet.rotation = otherPlayerBulletData.rotation;
         bullet.body.setVelocity(otherPlayerBulletData.velocity.x, otherPlayerBulletData.velocity.y);
         bullet.setActive(true);
         bullet.setVisible(true);
+
+        scene.otherPlayerBullets.add(bullet);
     }
 
     // Check for current client boosting
