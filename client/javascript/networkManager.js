@@ -79,7 +79,7 @@ export default class NetworkManager {
         scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
             otherPlayer.body.velocity.x = 0;
             otherPlayer.body.velocity.y = 0;
-            otherPlayer.tint = Math.random() * 0xffffff;
+            otherPlayer.tint = 0xff0000;
             laser.destroy();
         }, null, this);
         
@@ -87,7 +87,7 @@ export default class NetworkManager {
         scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet){
             ship.body.velocity.x = 0;
             ship.body.velocity.y = 0;
-            ship.tint = Math.random() * 0xffffff;
+            ship.tint = 0xff0000;
 
             // Destroy this.ship.entityText.
             this.ship.entityText.destroy(true);
