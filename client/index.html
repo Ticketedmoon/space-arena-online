@@ -5,7 +5,10 @@
     <head>
         <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
+        <link rel="stylesheet" type="text/css" href="stylesheets/animation-style.css"/>
         <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Russo+One&display=swap" rel="stylesheet">
         <meta charset="utf-8">
     </head>
  
@@ -15,54 +18,75 @@
         <script src="/socket.io/socket.io.js"></script>
         <script type="module" src="javascript/launcher.js"></script>
 
-        <div class="introduction"> 
-            <h2> Online Multiplayer Space Game - <span style="color: rgb(221, 255, 0)"> Built by Shane </span> </h2>
-        </div>
+        <!-- Content -->
+        <div class="wrapper">
+            <div class="introduction">
+                <h2> Online Multi-player Space Game - <span style="color: rgb(248,255,249)"> Built by Shane </span> </h2>
+            </div>
 
-        <div id="game-canvas">
-            <div id="phaser-canvas">
-                <div class="login-screen-interface">
-                    <div class="game-title">
-                        <h2> Project NX </h2>
+            <div id="game-canvas">
+                <div id="phaser-canvas">
+                    <div class="login-screen-interface">
+                        <div class="game-title">
+                            <h2> Project NX </h2>
+                        </div>
+                        <div class="login-text-box login">
+                            <input id="login-name" placeholder="Username" type="text" name="text-box" />
+                        </div>
+                        <div class="login-text-button login">
+                            <button id="login-button"> Join Game </button>
+                        </div>
                     </div>
-                    <div class="login-text-box login">
-                        <input id="login-name" placeholder="Username" type="text" name="text-box" />
-                    </div>
-                    <div class="login-text-button login">
-                        <button id="login-button"> Join Game </button>
+                    <div class="chat-container">
+                        <div class="chat-log-wrapper">
+                            <div class="chat-log"></div>
+                        </div>
+                        <div class="text-box-div">
+                            <input id="text-box" type="text" name="text-box" />
+                        </div>
                     </div>
                 </div>
-                <div class="chat-container">
-                    <div class="chat-log-wrapper">
-                        <div class="chat-log"></div>
-                    </div>
-                    <div class="text-box-div">
-                        <input id="text-box" type="text" name="text-box" />
-                    </div>
+            </div>
+
+            <div class="information-under-canvas-wrapper">
+                <div class="instructions under-canvas">
+                    <h2> Instructions </h2>
+                    <ol>
+                        <li> Accelerate your ship forward with the <span class="info-span"> Up </span> arrow key. </li>
+                        <li> Rotate your ship around with the <span class="info-span"> Left & Right </span> arrow keys. </li>
+                        <li> Engage boost thrusters with the <span class="info-span"> shift key </span> for rapid acceleration </li>
+                        <li> Fire laser projectiles at other players with the <span class="info-span"> x key </span> </li>
+                        <li> Invoke a meteor shot at other players with the <span class="info-span"> c key </span>  </li>
+                        <li> Reload your Laser artillery with the <span class="info-span"> r key </span> </li>
+                        <li> Chat with other players using the <span class="info-span"> Enter key </span> </li>
+                    </ol>
+                </div>
+
+                <div class="information under-canvas">
+                    <h2> About the Project </h2>
+                    <ol>
+                        <li> <span class="info-span"> Author:</span> Shane </li>
+                        <li> <span class="info-span"> Summary: </span> This project is a 2D online multi-player space game playable via the web. </li>
+                        <li> <span class="info-span"> Tech Stack: </span>
+                            <span class="info-span"> NodeJs, Socket.io, Express, Heroku</span>, and of course,
+                            <span class="info-span"> HTML, CSS & Javascript.</span>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
 
-        <div class="instructions under-canvas"> 
-            <h2> Instructions </h2>
-            <ol>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 1. Accelerate your ship forward with the <span style="color: lime; font-weight: bold;"> Up </span> arrow key. </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 2. Rotate your ship around with the <span style="color: lime; font-weight: bold;"> Left & Right </span> arrow keys. </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 3. Engage boost thrusters with the <span style="color: lime; font-weight: bold;"> shift key </span> for rapid acceleration </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 4. Fire laser projectiles at other players with the <span style="color: lime; font-weight: bold;"> x key </span> </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 4. Invoke a meteor shot at other players with the <span style="color: lime; font-weight: bold;"> c key </span> </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 5. Reload your Laser artillery with the <span style="color: lime; font-weight: bold;"> r key </span> </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> 6. Chat with other players using the <span style="color: lime; font-weight: bold;"> Enter key </span> </p>
-            </ol>  
-        </div>
-        
-        <div class="information under-canvas"> 
-            <h2> About the Project </h2>
-            <ol>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> <strong> Author: </strong> Shane </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> <strong> Summary: </strong> This project is a 2D online multiplayer space game playable via the web. </p>
-                <p style="font-family: calibri, Arial, Helvetica, sans-serif"> <strong> Tech Stack: </strong> NodeJs, Socket.io, Express, Heroku, and of course, HTML, CSS & Javascript. </p>
-            </ol>
+        <div class="waveWrapper waveAnimation">
+            <!-- Animation at bottom -->
+            <div class="waveWrapperInner bgTop">
+                <div class="wave waveTop" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-top.png')"></div>
+            </div>
+            <div class="waveWrapperInner bgMiddle">
+                <div class="wave waveMiddle" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-mid.png')"></div>
+            </div>
+            <div class="waveWrapperInner bgBottom">
+                <div class="wave waveBottom" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-bot.png')"></div>
+            </div>
         </div>
         
     </body>
