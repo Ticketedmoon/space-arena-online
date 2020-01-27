@@ -7,7 +7,7 @@ export default class LoginScene extends Phaser.Scene {
 
     preload() {
         this.load.path = 'assets/login-scene/';
-        this.load.image('background-image', 'background.png')
+        this.load.image('background-image', 'blue-space-void.jpg')
     }
 
     create() {
@@ -33,6 +33,8 @@ export default class LoginScene extends Phaser.Scene {
                 self.attemptLogin(self);
             }
         });
+
+        this.setScreenVisible();
     }
 
     attemptLogin(self) {
@@ -51,6 +53,10 @@ export default class LoginScene extends Phaser.Scene {
             // TODO: Refactor this - Do not use alert() - perhaps display red text on screen, something better.
             alert("Please enter a username before joining an online session.");
         }
+    }
+
+    setScreenVisible(self) {
+        document.getElementsByTagName("html")[0].style.visibility = "visible";
     }
 
 }

@@ -2,10 +2,12 @@ import Game from './game.js';
 
 class Launcher {
     initialize() {
-        var game = new Game();
+        let game = new Game();
     }
 }
 
 // Instantiate Launcher
-var launcher = new Launcher();
-launcher.initialize();
+$(document).ready(function() {
+    let launcher = new Launcher();
+    launcher.initialize();
+});
