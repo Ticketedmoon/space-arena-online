@@ -17,6 +17,7 @@ export default class LoginScene extends Phaser.Scene {
         background.setScale(0.75, 0.75);
         background.setAlpha(0.25);
 
+
         // Show
         $('.login-screen-interface').show();
 

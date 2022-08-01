@@ -14,6 +14,8 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
+        this.load.path = 'assets/backgrounds/';
+        this.load.image('game-background-image', 'large-space-background.png')
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
         this.textBoxManager = new TextBoxManager();
@@ -41,8 +43,11 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
-        // Set background
-        this.background = this.physics.add.sprite(0, 0, 'background_anim_1').setOrigin(0, 0).setScale(2, 2).play('load');
+        // Background stuff
+        this.background = this.add.tileSprite(0, 0, 1920, 1080, "game-background-image")
+            .setOrigin(0, 0);
+
+        this.physics.world.setBounds(0, 0, 1920, 872);
 
         // Emit to server to start the socket connection to server
         this.socket.emit('initializeSocketConnection', this.userName);
@@ -52,6 +57,8 @@ export default class GameScene extends Phaser.Scene {
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === self.socket.id) {
                     self.networkManager.addPlayer(self, id, players[id]);
+                    self.cameras.main.setBounds(0, 0, self.background.width, self.background.height);
+                    self.cameras.main.startFollow(self.networkManager.ship);
                 }
                 else {
                     self.networkManager.addOtherPlayer(self, id, players[id]);

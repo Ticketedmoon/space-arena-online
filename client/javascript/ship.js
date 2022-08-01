@@ -52,12 +52,19 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     }
 
     initializeAmmunitionUserInterface(scene) {
+        const laserAmmoText = this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString();
         // Set normal ammo sprite
-        this.lasers.ui = scene.add.text(scene.scale.width, scene.scale.height, this.lasers.currentMagazineAmmo.toString() + "|" + 
-        this.lasers.magazineLimit.toString()).setOrigin(5, 2.5).setScale(1, 1);
+        this.lasers.ui = scene.add.text(scene.scale.width, scene.scale.height, laserAmmoText)
+            .setOrigin(5, 2.5)
+            .setScale(1, 1)
+            .setScrollFactor(0);
 
+        const meteorShotId = 'ammo_' + this.meteorShots.ammo.toString();
         // Set meteor shot ammo sprite
-        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, 'ammo_' + this.meteorShots.ammo.toString()).setOrigin(1.5, 1.25).setScale(1, 1);
+        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotId)
+            .setOrigin(1.5, 1.25)
+            .setScale(1, 1)
+            .setScrollFactor(0);
     }
 
     // Check for bullet fire by pressing the 'x' key
