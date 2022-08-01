@@ -1,11 +1,12 @@
 {
-  "name": "Node-RPG-Game",
+  "name": "space-arena-online",
   "version": "1.0.0",
-  "description": "Building an online multiplayer NodeJS-based Role Playing Game.",
+  "description": "An online multiplayer NodeJS-based Space Action Game.",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "update-package-lock": "npm i --package-lock-only"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,7 @@
   "homepage": "https://github.com/ShaneCreedon/NodeJS-RPG-Game#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.4.0"
   },
   "devDependencies": {}
 }
