@@ -6,14 +6,57 @@ html { visibility:hidden; }
     z-index:1000;
     position: absolute;
     left: 50%;
+    width: 100%;
     transform: translate(-50%, 0);
 }
 
-.introduction, .information, .instructions {
+.introduction, .information {
     margin: 0;  
     padding: 1em 2em 1em 2em;
     text-align: center;
     font-size: 1.4em;   
+}
+
+.introduction > h2 {
+    font-family: cursive, calibri, Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    line-height: 2em;
+    color: #1fa8ab;
+    margin: 0;  
+    padding: 0.5em;
+    text-shadow: 1px 1px black;
+}
+
+.introduction > h2 > span {
+    color: white;
+}
+
+.instructions-wrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.instructions {
+    background: rgba(10,105,112, 0.5); 
+    text-align: left;
+    border: 1px solid white;
+    font-family: cursive, 'Courier New', Courier, monospace;
+}
+
+.instructions > ol {
+    width: 80%;
+    color: white;
+}
+
+.instructions > ol > li {
+    padding-bottom: 0.5em;
+}
+
+.instructions > h2 {
+    color: white;
+    text-align: center;
 }
 
 canvas {        
@@ -26,11 +69,18 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    align-self: start;
 }
 
 #phaser-canvas {
     display:inline-block;
     position: relative;
+}
+
+.canvas-and-instructions-wrapper {
+    display: flex;
+    padding: 3em 5em;
 }
 
 /* User Stories / Scenarios */
@@ -104,30 +154,19 @@ span {
     max-height: 12.5em;
 }
 
-h2 {
+.game-title > h2 {
     font-family: 'Press Start 2P', calibri, Arial, Helvetica, sans-serif, cursive;
     font-size: 0.75em;
     line-height: 2em;
-    color: #1fa8ab;
+    color: white;
     margin: 0;  
     padding: 0.5em;
     text-shadow: 1px 1px black;
 }
 
-.under-canvas {
-    margin: 0 auto;
-    display: inline-block;
-    text-align:left;
-    font-family: cursive;
-}
-
-.information-under-canvas-wrapper {
-    text-align: center;
-}
-
 .message {
     font-family: calibri, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        color: white;
+    color: white;
     font-size: 0.85em;
     word-wrap: break-word;
     z-index: 60;
@@ -138,12 +177,6 @@ h2 {
 
 .game-title {
     font-size: 2.5em;
-}
-
-.game-title > h2 {
-    font-weight: bold;
-    color:white;
-    -webkit-text-stroke: 0.75px black;
 }
 
 .login-screen-interface {
@@ -187,21 +220,8 @@ h2 {
     color: black;
     font-weight: initial;
     opacity: 0.5; /* Firefox */
-  }
-
-ol, p {
-    color: black;
-    text-align: left;
-    margin: 0 auto;
-    text-shadow: 1px 1px #45aeb2;
-    font-size: 0.85em;
 }
 
-li {
-    font-family: 'Russo One', sans-serif;
-    -webkit-text-stroke: 0.5px black;
-    color: white;
-}
 
 /* Button */
 /* Download Button  */

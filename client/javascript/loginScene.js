@@ -7,13 +7,15 @@ export default class LoginScene extends Phaser.Scene {
 
     preload() {
         this.load.path = 'assets/login-scene/';
-        this.load.image('background-image', 'blue-space-void.jpg')
+        this.load.image('background-image', 'space-pixels.jpg')
     }
 
     create() {
         let self = this;
         let background = this.add.sprite(0, 0, 'background-image');
         background.setOrigin(0, 0);
+        background.setScale(0.75, 0.75);
+        background.setAlpha(0.25);
 
         // Show
         $('.login-screen-interface').show();
