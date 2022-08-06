@@ -1,7 +1,7 @@
 {
   "name": "space-arena-online",
   "version": "1.0.0",
-  "description": "An online multiplayer NodeJS-based Space Action Game.",
+  "description": "An online multiplayer space game. Built with Node.js, Socket.io, Express and Webpack",
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ShaneCreedon/NodeJS-RPG-Game.git"
+    "url": "https://github.com/ShaneCreedon/Space-Arena-Online.git"
   },
   "keywords": [],
   "author": "Shane Creedon",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ShaneCreedon/NodeJS-RPG-Game/issues"
+    "url": "https://github.com/ShaneCreedon/Space-Arena-Online/issues"
   },
-  "homepage": "https://github.com/ShaneCreedon/NodeJS-RPG-Game#readme",
+  "homepage": "https://github.com/ShaneCreedon/Space-Arena-Online#readme",
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^2.4.0"
