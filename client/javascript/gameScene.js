@@ -30,6 +30,14 @@ export default class GameScene extends Phaser.Scene {
         // Setup socket for each client
         this.socket = io();
 
+         // Background
+        this.background = this.add
+            .tileSprite(0, 0, 1920, 1080, "game-background-image")
+            .setOrigin(0, 0);
+
+        // Set up camera
+        self.cameras.main.setBounds(0, 0, self.background.width, self.background.height);
+
         // Register text box
         this.textBoxManager.registerChatBox(this.socket);
         this.textBoxManager.registerChatBoxVisibilityControls();
@@ -43,10 +51,6 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
-        // Background stuff
-        this.background = this.add.tileSprite(0, 0, 1920, 1080, "game-background-image")
-            .setOrigin(0, 0);
-
         this.physics.world.setBounds(0, 0, 1920, 872);
 
         // Emit to server to start the socket connection to server
@@ -57,7 +61,6 @@ export default class GameScene extends Phaser.Scene {
             Object.keys(players).forEach(function (id) {
                 if (players[id].playerId === self.socket.id) {
                     self.networkManager.addPlayer(self, id, players[id]);
-                    self.cameras.main.setBounds(0, 0, self.background.width, self.background.height);
                     self.cameras.main.startFollow(self.networkManager.ship);
                 }
                 else {

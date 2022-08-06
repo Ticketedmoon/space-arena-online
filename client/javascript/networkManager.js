@@ -27,6 +27,7 @@ export default class NetworkManager {
         this.ship = new Ship(scene, socketId, newX, newY, 0, name, colour);
         this.ship.initializeAmmunitionSystem(scene);
         this.ship.initializeAmmunitionUserInterface(scene);
+        scene.cameras.main.startFollow(this.ship);
         scene.socket.emit('playerMovement', { x: newX, y: newY, rotation: 0, boostActive: this.ship.boostActive });
     }
 
@@ -84,7 +85,7 @@ export default class NetworkManager {
             let self = this;
 
             // Collision between ship regular lasers
-            scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer){
+            scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer) {
                 otherPlayer.body.velocity.x = 0;
                 otherPlayer.body.velocity.y = 0;
                 otherPlayer.tint = 0xff0000;
@@ -96,7 +97,7 @@ export default class NetworkManager {
             }, null, this);
 
             // Collision between ship meteor bombs
-            scene.physics.collide(this.ship.meteorShots, scene.otherPlayers, function(meteorShot, otherPlayer){
+            scene.physics.collide(this.ship.meteorShots, scene.otherPlayers, function(meteorShot, otherPlayer) {
                 otherPlayer.body.velocity.x = 0;
                 otherPlayer.body.velocity.y = 0;
                 otherPlayer.tint = 0xff0000;
@@ -108,7 +109,7 @@ export default class NetworkManager {
             }, null, this);
             
             // Collision between ship and other player bullets
-            scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet){
+            scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet) {
                 ship.body.velocity.x = 0;
                 ship.body.velocity.y = 0;
                 ship.tint = 0xff0000;
