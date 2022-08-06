@@ -6,7 +6,7 @@ html { visibility:hidden; }
     z-index:1000;
     position: absolute;
     left: 50%;
-    width: 100%;
+    width: 90%;
     transform: translate(-50%, 0);
 }
 
@@ -37,6 +37,20 @@ html { visibility:hidden; }
     flex-direction: column;
     width: 30%;
 }
+
+@media screen and (max-width: 1024px) {
+    .canvas-and-instructions-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+    .instructions-wrapper {
+        width: 60%;
+    }
+    #game-canvas {
+        align-self: center;
+    }
+  }
+  
 
 .instructions {
     background: rgba(10,105,112, 0.5); 
@@ -80,7 +94,8 @@ canvas {
 
 .canvas-and-instructions-wrapper {
     display: flex;
-    padding: 3em 5em;
+    gap: 2em;
+    padding: 3em 0;
 }
 
 /* User Stories / Scenarios */
