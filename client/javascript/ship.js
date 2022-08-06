@@ -18,6 +18,11 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.shipWidth = 13.5;
         this.shipHeight = 10;
 
+        this.killCount = {
+            "count": 0,
+            "text": null
+        };
+
         // Enabling physics for this object is crucial + set world boundaries
         scene.physics.world.enable(this, Phaser.Physics.ARCADE);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
@@ -54,6 +59,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     initializeAmmunitionUserInterface(scene) {
         const laserAmmoText = this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString();
         // Set normal ammo sprite
+        // TODO: Move to dedicated class - Ship should not manage these details.
         this.lasers.ui = scene.add.text(scene.scale.width, scene.scale.height, laserAmmoText)
             .setOrigin(5, 2.5)
             .setScale(1, 1)
@@ -63,6 +69,11 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         // Set meteor shot ammo sprite
         this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotId)
             .setOrigin(1.5, 1.25)
+            .setScale(1, 1)
+            .setScrollFactor(0);
+        
+        // TODO: Fix me, text jumps at 10 or higher kills.
+        this.killCount.text = scene.add.text(scene.scale.width, scene.scale.height, "Kills: 000")
             .setScale(1, 1)
             .setScrollFactor(0);
     }
@@ -78,7 +89,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
             this.lasers.ammo--;
-            
+             
             // Set bullet properties
             bullet.rotation = this.rotation;
             scene.physics.velocityFromRotation(this.rotation, 600, bullet.body.velocity);
@@ -129,5 +140,10 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     deleteUserInterface() {
         this.lasers.ui.destroy();
         this.meteorShots.ui.destroy();
+    }
+
+    incrementKillCount() {
+        this.killCount.count++;
+        this.killCount.text.setText("Kills: " + this.killCount.count)
     }
 }

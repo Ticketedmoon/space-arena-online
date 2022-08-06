@@ -50,8 +50,7 @@ export default class NetworkManager {
         } else if (scene.cursors.down.isDown) {
             // Check down key is down
             scene.physics.velocityFromRotation(this.ship.rotation + 270, -50, this.ship.body.acceleration);
-        }
-        else {
+        } else {
             // Otherwise, stop acceleration in either direction 
             this.ship.body.setAcceleration(0);
         }
@@ -90,6 +89,7 @@ export default class NetworkManager {
                 otherPlayer.body.velocity.y = 0;
                 otherPlayer.tint = 0xff0000;
                 laser.destroy();
+                self.ship.incrementKillCount();
 
                 setTimeout(function() {
                     otherPlayer.clearTint();
