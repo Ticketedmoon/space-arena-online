@@ -6,36 +6,29 @@ export default class TextBoxManager {
         this.messageNo = 1;
     }
 
+    // TODO: Can we combine the two methods below?
+
     registerChatBox(socket) {
         let self = this;
-        $('#text-box').keypress(function(event) {
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13') {
-                // Enter key has been pressed inside text-box
-                // Check if input contains text, if it does, send it to all nodes.
-                // Otherwise, close chat system - IE make it invisible.
-                let message = $(this).val();
+        const textBox = document.getElementById("text-box");
+        const textBoxWrapper = document.getElementsByClassName("text-box-div")[0];
+        textBox.addEventListener("keydown", (event) => {
+            if (event.key == 'Enter') {
+                const message = textBox.value;
                 if (message.length > 0) {
                     // Clear input of message
-                    $(this).val('');
-
+                    textBox.value = null;
                     // hide chat container
-                    $(".text-box-div").css("visibility", "hidden");
-
+                    textBoxWrapper.style.visibility = "hidden";
                     // Emit message to all other client nodes
                     socket.emit('chatUpdate', message, socket.id);
 
-                }
-                else {
+                } else {
                     // Hide chat
-                    $(".text-box-div").css("visibility", "hidden");
-
+                    textBoxWrapper.style.visibility = "hidden";
                     // Remove focus from input field
-                    $(".text-box-div").blur(); 
+                    textBoxWrapper.blur();
                 }
-
-                 // Update boolean
-                 self.chatInputIsVisible = !self.chatInputIsVisible;
             }
             event.stopPropagation();
         });
@@ -43,25 +36,24 @@ export default class TextBoxManager {
 
     registerChatBoxVisibilityControls() {
         let self = this;
-        $(document).keypress(function(event) {
-            var keycode = (event.keyCode ? event.keyCode : event.which);
-            if(keycode == '13') {
+        const textBox = document.getElementById("text-box");
+        const textBoxWrapper = document.getElementsByClassName("text-box-div")[0];
+
+        document.addEventListener("keypress", (event) => {
+            if (event.key == 'Enter') {
                 if (self.chatInputIsVisible) {
                     // Hide
-                    $(".text-box-div").css("visibility", "hidden");
-                }
-                else {
+                    textBoxWrapper.style.visibility = "hidden";
+                } else {
                     // Show
-                    $(".text-box-div").css("visibility", "visible");
-
+                    textBoxWrapper.style.visibility = "visible";
                     // Focus
-                    $("#text-box").focus();
+                    textBox.focus();
                 }
                 
                 // Update boolean
                 self.chatInputIsVisible = !self.chatInputIsVisible;   
             }
-            event.stopPropagation();
         });    
     }
 
@@ -71,7 +63,7 @@ export default class TextBoxManager {
             $('.message_' + (this.messageNo-this.chatLogLimit).toString()).remove();
         }
 
-        let styleMessage = $("<p class=\"message message_" + this.messageNo + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</p>")
+        let styleMessage = $("<span class=\"message message_" + this.messageNo + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</span>")
         $(".chat-log").append(styleMessage);
         this.removeMessageAndFadeOut(this);
     }

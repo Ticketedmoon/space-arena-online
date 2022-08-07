@@ -186,6 +186,7 @@ span {
 }
 
 .message {
+    display: block;
     font-family: calibri, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     color: white;
     font-size: 0.85em;

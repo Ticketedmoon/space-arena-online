@@ -59,7 +59,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     // TODO: Move to dedicated class - Ship should not manage these details.
     initializeAmmunitionUserInterface(scene) {
         const laserAmmoText = this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString();
-        this.lasers.ui = scene.add.bitmapText(768, scene.scale.height, 'arcadeFont', laserAmmoText, 16)
+        this.lasers.ui = scene.add.bitmapText(748, scene.scale.height, 'arcadeFont', laserAmmoText, 16)
             .setOrigin(1, 2)
             .setDropShadow(1, 2, 0x000000, 1)
             .setScrollFactor(0);
