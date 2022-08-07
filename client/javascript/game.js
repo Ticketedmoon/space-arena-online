@@ -34,3 +34,6 @@ export default class Game {
         this.game = new Phaser.Game(this.config);
     }
 }
+
+// Launch
+new Game();

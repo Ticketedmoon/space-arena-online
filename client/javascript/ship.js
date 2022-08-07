@@ -18,6 +18,11 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.shipWidth = 13.5;
         this.shipHeight = 10;
 
+        this.killCount = {
+            "count": 0,
+            "text": null
+        };
+
         // Enabling physics for this object is crucial + set world boundaries
         scene.physics.world.enable(this, Phaser.Physics.ARCADE);
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
@@ -51,19 +56,24 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.meteorShots.ammo = 10;
     }
 
+    // TODO: Move to dedicated class - Ship should not manage these details.
     initializeAmmunitionUserInterface(scene) {
         const laserAmmoText = this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString();
-        // Set normal ammo sprite
-        this.lasers.ui = scene.add.text(scene.scale.width, scene.scale.height, laserAmmoText)
-            .setOrigin(5, 2.5)
-            .setScale(1, 1)
+        this.lasers.ui = scene.add.bitmapText(748, scene.scale.height, 'arcadeFont', laserAmmoText, 16)
+            .setOrigin(1, 2)
+            .setDropShadow(1, 2, 0x000000, 1)
             .setScrollFactor(0);
 
-        const meteorShotId = 'ammo_' + this.meteorShots.ammo.toString();
+        const meteorShotSpriteId = 'ammo_' + this.meteorShots.ammo.toString();
         // Set meteor shot ammo sprite
-        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotId)
-            .setOrigin(1.5, 1.25)
+        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotSpriteId)
+            .setOrigin(1.5, 1.15)
             .setScale(1, 1)
+            .setScrollFactor(0);
+        
+        this.killCount.text = scene.add.bitmapText(100, scene.scale.height, 'arcadeFont', 'Kills: ' + this.killCount.count, 16)
+            .setOrigin(1, 2)
+            .setDropShadow(1, 2, 0x000000, 1)
             .setScrollFactor(0);
     }
 
@@ -78,7 +88,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
             this.lasers.ammo--;
-            
+             
             // Set bullet properties
             bullet.rotation = this.rotation;
             scene.physics.velocityFromRotation(this.rotation, 600, bullet.body.velocity);
@@ -129,5 +139,10 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     deleteUserInterface() {
         this.lasers.ui.destroy();
         this.meteorShots.ui.destroy();
+    }
+
+    incrementKillCount() {
+        this.killCount.count++;
+        this.killCount.text.setText("Kills: " + this.killCount.count)
     }
 }

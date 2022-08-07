@@ -21,6 +21,9 @@ export default class GameScene extends Phaser.Scene {
         this.textBoxManager = new TextBoxManager();
         this.networkManager = new NetworkManager();
         this.imageLoader.loadAnimationImageSets(this);
+
+        this.load.path = 'assets/resources/fonts/';
+        this.load.bitmapFont('arcadeFont', 'arcade.png', 'arcade.xml');
     }
 
     create() {
@@ -111,23 +114,22 @@ export default class GameScene extends Phaser.Scene {
         });
 
         // Initialize default ship cursor key inputs
-        this.cursors = this.input.keyboard.addKeys('up, down, left, right, shift');
+        this.cursors = this.input.keyboard.createCursorKeys();
 
         // Initialize Meteor Strike function @Letter keys with Phaser
-        this.input.keyboard.on('keydown_C', function(event) {
-            self.networkManager.ship.fire_meteor_shot(self);
+        this.input.keyboard.on('keydown', function (event) {
+            if (self.textBoxManager.isChatBoxOpen()) {
+                return;
+            } else {
+                if (event.key == 'c') {
+                    self.networkManager.ship.fire_meteor_shot(self);
+                } else if (event.key == 'x') {
+                    self.networkManager.ship.fire_laser(self);
+                } else if (event.key == 'r') {
+                    self.networkManager.ship.reload();
+                }
+            }
         });
-
-        // Initialize Fire function @Letter keys with Phaser
-        this.input.keyboard.on('keydown_X', function(event) {
-            self.networkManager.ship.fire_laser(self);
-        });
-
-        // Initialize Reload function @Letter keys with Phaser
-        this.input.keyboard.on('keydown_R', function(event) {
-            self.networkManager.ship.reload();
-        });
-
     }
 
     update() {
