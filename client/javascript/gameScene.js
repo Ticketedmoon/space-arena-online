@@ -118,12 +118,16 @@ export default class GameScene extends Phaser.Scene {
 
         // Initialize Meteor Strike function @Letter keys with Phaser
         this.input.keyboard.on('keydown', function (event) {
-            if (event.key == 'c') {
-                self.networkManager.ship.fire_meteor_shot(self);
-            } else if (event.key == 'x') {
-                self.networkManager.ship.fire_laser(self);
-            } else if (event.key == 'r') {
-                self.networkManager.ship.reload();
+            if (self.textBoxManager.isChatBoxOpen()) {
+                return;
+            } else {
+                if (event.key == 'c') {
+                    self.networkManager.ship.fire_meteor_shot(self);
+                } else if (event.key == 'x') {
+                    self.networkManager.ship.fire_laser(self);
+                } else if (event.key == 'r') {
+                    self.networkManager.ship.reload();
+                }
             }
         });
     }

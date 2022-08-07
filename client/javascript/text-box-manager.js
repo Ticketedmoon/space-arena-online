@@ -86,4 +86,8 @@ export default class TextBoxManager {
         }, 10000);
         self.messageNo++;
     }
+
+    isChatBoxOpen() {
+        return this.chatInputIsVisible;
+    }
 }
