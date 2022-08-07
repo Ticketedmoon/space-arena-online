@@ -56,25 +56,24 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         this.meteorShots.ammo = 10;
     }
 
+    // TODO: Move to dedicated class - Ship should not manage these details.
     initializeAmmunitionUserInterface(scene) {
         const laserAmmoText = this.lasers.currentMagazineAmmo.toString() + "|" + this.lasers.magazineLimit.toString();
-        // Set normal ammo sprite
-        // TODO: Move to dedicated class - Ship should not manage these details.
-        this.lasers.ui = scene.add.text(scene.scale.width, scene.scale.height, laserAmmoText)
-            .setOrigin(5, 2.5)
-            .setScale(1, 1)
+        this.lasers.ui = scene.add.bitmapText(768, scene.scale.height, 'arcadeFont', laserAmmoText, 16)
+            .setOrigin(1, 2)
+            .setDropShadow(1, 2, 0x000000, 1)
             .setScrollFactor(0);
 
-        const meteorShotId = 'ammo_' + this.meteorShots.ammo.toString();
+        const meteorShotSpriteId = 'ammo_' + this.meteorShots.ammo.toString();
         // Set meteor shot ammo sprite
-        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotId)
-            .setOrigin(1.5, 1.25)
+        this.meteorShots.ui = scene.physics.add.sprite(scene.scale.width, scene.scale.height, meteorShotSpriteId)
+            .setOrigin(1.5, 1.15)
             .setScale(1, 1)
             .setScrollFactor(0);
         
-        // TODO: Fix me, text jumps at 10 or higher kills.
-        this.killCount.text = scene.add.text(scene.scale.width, scene.scale.height, "Kills: 000")
-            .setScale(1, 1)
+        this.killCount.text = scene.add.bitmapText(100, scene.scale.height, 'arcadeFont', 'Kills: ' + this.killCount.count, 16)
+            .setOrigin(1, 2)
+            .setDropShadow(1, 2, 0x000000, 1)
             .setScrollFactor(0);
     }
 
