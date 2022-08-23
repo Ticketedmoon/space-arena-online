@@ -121,11 +121,12 @@ export default class GameScene extends Phaser.Scene {
             if (self.textBoxManager.isChatBoxOpen()) {
                 return;
             } else {
-                if (event.key == 'c') {
+		let key = event.key.toLowerCase();
+                if (key == 'c') {
                     self.networkManager.ship.fire_meteor_shot(self);
-                } else if (event.key == 'x') {
+                } else if (key == 'x') {
                     self.networkManager.ship.fire_laser(self);
-                } else if (event.key == 'r') {
+                } else if (key == 'r') {
                     self.networkManager.ship.reload();
                 }
             }
