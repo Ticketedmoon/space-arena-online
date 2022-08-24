@@ -142,7 +142,8 @@ export default class NetworkManager {
     // Method is used for other player ships when shooting.
     // Shows different player projectiles.
     spawn_projectile(scene, otherPlayerBulletData, scaleX=1, scaleY=1) {
-        let bullet = scene.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1").setScale(scaleX, scaleY);        
+        let bullet = scene.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, 
+		"player_laser_shoot_1").setScale(scaleX, scaleY);        
         bullet.checkWorldBounds = true;
         bullet.outOfBoundsKill = true;
 

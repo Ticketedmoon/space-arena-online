@@ -84,10 +84,9 @@ export default class Ship extends Phaser.GameObjects.Sprite {
         if (this.lasers.currentMagazineAmmo > 0) {
             // TODO: Refactor this groupness, the group isn't being used as such.
             let bullet = this.lasers.get(this.x, this.y, "player_laser_shoot_1");
-
+		
             // reduce ammo count
             this.lasers.currentMagazineAmmo--;
-            this.lasers.ammo--;
              
             // Set bullet properties
             bullet.rotation = this.rotation;
@@ -96,7 +95,12 @@ export default class Ship extends Phaser.GameObjects.Sprite {
             bullet.setVisible(true);
 
             // Emit to all other players
-            scene.socket.emit('bulletFired', {x: bullet.x, y: bullet.y, rotation: bullet.rotation, velocity: bullet.body.velocity});
+            scene.socket.emit('bulletFired', {
+				x: bullet.x, 
+				y: bullet.y, 
+				rotation: bullet.rotation, 
+				velocity: bullet.body.velocity
+			});
 
             // Update bullet UI
             this.updateBulletAmmoUi();
@@ -104,10 +108,12 @@ export default class Ship extends Phaser.GameObjects.Sprite {
     }
 
     // Different colour
+	// TODO: Investigate if we need meteorShots.ammo here, and rather if we can just use the meteorShots group.
     fire_meteor_shot(scene) {
-        var meteor_projectile_bullet = this.meteorShots.get(this.x, this.y, "player_laser_shoot_1")
-        if (meteor_projectile_bullet) {
+        if (this.meteorShots.ammo > 0) {
+        	var meteor_projectile_bullet = this.meteorShots.get(this.x, this.y, "player_laser_shoot_1")
             this.meteorShots.ammo--;
+
             meteor_projectile_bullet.setScale(3, 3);
             this.meteorShots.ui.setTexture("ammo_" + this.meteorShots.ammo.toString());
 
@@ -117,9 +123,14 @@ export default class Ship extends Phaser.GameObjects.Sprite {
             meteor_projectile_bullet.setVisible(true);
 
             // Emit to all other players
-            scene.socket.emit('meteorFired', {x: meteor_projectile_bullet.x, y: meteor_projectile_bullet.y, rotation: meteor_projectile_bullet.rotation, velocity: meteor_projectile_bullet.body.velocity});
-        }
-    }
+            scene.socket.emit('meteorFired', {
+				x: meteor_projectile_bullet.x, 
+				y: meteor_projectile_bullet.y, 
+				rotation: meteor_projectile_bullet.rotation, 
+				velocity: meteor_projectile_bullet.body.velocity
+			});
+    	}
+	}
 
     // Removes all members of this Group and optionally removes them from the Scene and / or destroys them.
     reload() {
