@@ -1,0 +1,11 @@
+{
+    "last.exportedFilePath": "/home/shane/Documents/github_projects/Space-Arena-Online/client/assets/maps",
+    "last.imagePath": "/home/shane/Documents/github_projects/Space-Arena-Online/client/assets/backgrounds",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "tileset.embedInMap": true,
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

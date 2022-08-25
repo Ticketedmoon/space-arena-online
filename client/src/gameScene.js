@@ -14,8 +14,14 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.path = 'assets/backgrounds/';
-        this.load.image('game-background-image', 'large-space-background.png')
+        this.load.path = 'assets/maps/'
+
+        // this.load.image('game-background-image', 'large-space-background.png')
+		// Load the PNG
+		this.load.image('tiles', 'space-map.png');
+		// load the JSON file
+		this.load.tilemapTiledJSON('map', 'space-map.json')
+
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
         this.textBoxManager = new TextBoxManager();
@@ -33,13 +39,26 @@ export default class GameScene extends Phaser.Scene {
         // Setup socket for each client
         this.socket = io();
 
-         // Background
-        this.background = this.add
-            .tileSprite(0, 0, 1920, 1080, "game-background-image")
-            .setOrigin(0, 0);
+
+		// Map
+		const map = this.make.tilemap({
+			key: "map",
+			tileWidth: 64,
+			tilwHeight: 64
+		})
+
+		// First param: Name of tileset in Tiled, Second param: png load key.
+		const tileset = map.addTilesetImage("space-map", "tiles", 64, 64);
+		const layer = map.createLayer("space_layer", tileset, 0, 0);
 
         // Set up camera
-        self.cameras.main.setBounds(0, 0, self.background.width, self.background.height);
+		const mapWidth = map.tileWidth * map.width;
+		const mapHeight = map.tileHeight * map.height;
+
+        self.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
+
+		// World bounds
+        this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
         // Register text box
         this.textBoxManager.registerChatBox(this.socket);
@@ -54,7 +73,6 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
-        this.physics.world.setBounds(0, 0, 1920, 872);
 
         // Emit to server to start the socket connection to server
         this.socket.emit('initializeSocketConnection', this.userName);
