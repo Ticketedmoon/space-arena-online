@@ -171,6 +171,7 @@ span {
 }
 
 .chat-log {
+    display: inline-block;
     position: relative;
     max-height: 12.5em;
 }

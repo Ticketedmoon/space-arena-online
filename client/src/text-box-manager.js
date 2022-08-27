@@ -1,10 +1,12 @@
 export default class TextBoxManager {
 
+    FIFTEEN_SECONDS_MS = 20000;
+    CHAT_LOG_LIMIT = 7;
+
     constructor() {
         this.chatInputIsVisible = false;
-        this.chatLogLimit = 5;
-		this.messageIndex = 0;
-		this.messagesInProcessOfRemoval = new Set();
+		this.newMessageIndex = 0;
+		this.messageToRemoveIndex = 0;
     }
 
     // TODO: Can we combine the two methods below?
@@ -59,42 +61,33 @@ export default class TextBoxManager {
     }
 
     updateChatLog(message, colour, userName) {
-        let totalActiveVisibleMessages = $(".chat-log").children().length;
-        if (totalActiveVisibleMessages >= this.chatLogLimit) {
-            $('.message_' + (this.messageIndex - this.chatLogLimit).toString()).remove();
-        }
-
-        let styleMessage = $("<span class=\"message message_" + this.messageIndex + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</span>")
-        $(".chat-log").append(styleMessage);
-		this.messageIndex++;
-		
-		setTimeout(() => {
-			this.fadeOldestMessage();
-		}, 3000);
+        let styleMessage = $("<span class=\"message message_" + this.newMessageIndex + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</span>")
+        let chatLog = $(".chat-log");
+        
+        this.addMessageToChatLog(chatLog, styleMessage);
+        this.removeOldestMessageWhenLimitReached(chatLog);
+        setTimeout(() => this.fadeOldestMessage(), this.FIFTEEN_SECONDS_MS);
     }
 
 
-	fadeOldestMessage() {
-		let items = $(".chat-log").children("span");
-		let itemClass = items.eq(0).attr("class");
-		let messageId = null;
-		if (itemClass) {
-			messageId = itemClass.split(' ')[1];
-		}
+    removeOldestMessageWhenLimitReached(chatLog) {
+        let chatLogLength = chatLog.children().length;
+        if (chatLogLength > this.CHAT_LOG_LIMIT) {
+            let messageId = chatLog.children("span").eq(0).attr("class").split(' ')[1];
+            $(`.${messageId}`).remove();
+        }
+    }
 
-		let i = 0;
-		while (this.messagesInProcessOfRemoval.has(messageId)) {
-			let itemClass = items.eq(i).attr("class");
-			if (itemClass) {
-				messageId = itemClass.split(' ')[1];
-			}
-			i++;	
-		}
-		
-		this.messagesInProcessOfRemoval.add(messageId);
-		messageId = `.${messageId}`
-		$(messageId).fadeOut(1000, () => $(messageId).remove());
-	}
+    addMessageToChatLog(chatLog, styleMessage) {
+        chatLog.append(styleMessage);
+        this.newMessageIndex++;
+    }
+
+	fadeOldestMessage() {
+        const messageClass = `.message_${this.messageToRemoveIndex}`;
+        this.messageToRemoveIndex++;
+		$(messageClass).fadeOut(1000, () => $(messageClass).remove());
+    }
 
     isChatBoxOpen() {
         return this.chatInputIsVisible;
