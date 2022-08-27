@@ -3,7 +3,8 @@ export default class TextBoxManager {
     constructor() {
         this.chatInputIsVisible = false;
         this.chatLogLimit = 5;
-        this.messageNo = 1;
+		this.messageIndex = 0;
+		this.messagesInProcessOfRemoval = new Set();
     }
 
     // TODO: Can we combine the two methods below?
@@ -60,24 +61,40 @@ export default class TextBoxManager {
     updateChatLog(message, colour, userName) {
         let totalActiveVisibleMessages = $(".chat-log").children().length;
         if (totalActiveVisibleMessages >= this.chatLogLimit) {
-            $('.message_' + (this.messageNo-this.chatLogLimit).toString()).remove();
+            $('.message_' + (this.messageIndex - this.chatLogLimit).toString()).remove();
         }
 
-        let styleMessage = $("<span class=\"message message_" + this.messageNo + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</span>")
+        let styleMessage = $("<span class=\"message message_" + this.messageIndex + "\">" + "<span style=\"color: " + colour + "\">" + userName + "</span>: " + message + "</span>")
         $(".chat-log").append(styleMessage);
-        this.removeMessageAndFadeOut(this);
+		this.messageIndex++;
+		
+		setTimeout(() => {
+			this.fadeOldestMessage();
+		}, 3000);
     }
 
-    removeMessageAndFadeOut(self) {
-        let message = '.message_' + (self.messageNo).toString();
-        setTimeout(function() {
-            $(message).fadeOut(1000, function() {
-                $(message).remove();
-                self.messageNo--;
-            });
-        }, 10000);
-        self.messageNo++;
-    }
+
+	fadeOldestMessage() {
+		let items = $(".chat-log").children("span");
+		let itemClass = items.eq(0).attr("class");
+		let messageId = null;
+		if (itemClass) {
+			messageId = itemClass.split(' ')[1];
+		}
+
+		let i = 0;
+		while (this.messagesInProcessOfRemoval.has(messageId)) {
+			let itemClass = items.eq(i).attr("class");
+			if (itemClass) {
+				messageId = itemClass.split(' ')[1];
+			}
+			i++;	
+		}
+		
+		this.messagesInProcessOfRemoval.add(messageId);
+		messageId = `.${messageId}`
+		$(messageId).fadeOut(1000, () => $(messageId).remove());
+	}
 
     isChatBoxOpen() {
         return this.chatInputIsVisible;
