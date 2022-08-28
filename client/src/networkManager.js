@@ -84,7 +84,7 @@ export default class NetworkManager {
             let self = this;
 
             // Collision between ship regular lasers
-            scene.physics.collide(this.ship.lasers, scene.otherPlayers, function(laser, otherPlayer) {
+            scene.physics.collide(this.ship.lasers, scene.otherPlayers, (laser, otherPlayer) => {
                 otherPlayer.body.velocity.x = 0;
                 otherPlayer.body.velocity.y = 0;
                 otherPlayer.tint = 0xff0000;
@@ -97,11 +97,12 @@ export default class NetworkManager {
             }, null, this);
 
             // Collision between ship meteor bombs
-            scene.physics.collide(this.ship.meteorShots, scene.otherPlayers, function(meteorShot, otherPlayer) {
+            scene.physics.collide(this.ship.meteorShots, scene.otherPlayers, (meteorShot, otherPlayer) => {
                 otherPlayer.body.velocity.x = 0;
                 otherPlayer.body.velocity.y = 0;
                 otherPlayer.tint = 0xff0000;
                 meteorShot.destroy();
+                self.ship.incrementKillCount();
 
                 setTimeout(function() {
                     otherPlayer.clearTint();
@@ -109,7 +110,7 @@ export default class NetworkManager {
             }, null, this);
             
             // Collision between ship and other player bullets
-            scene.physics.collide(this.ship, scene.otherPlayerBullets, function(ship, otherPlayerBullet) {
+            scene.physics.collide(this.ship, scene.otherPlayerBullets, (ship, otherPlayerBullet) => {
                 ship.body.velocity.x = 0;
                 ship.body.velocity.y = 0;
                 ship.tint = 0xff0000;
@@ -134,7 +135,6 @@ export default class NetworkManager {
                     // Respawn player - Perhaps limit lives?
                     self.respawnPlayer(scene, prevName, prevColour, prevSocketId);
                 }, 250);
-                return;
             }, null, this);
         }
     }
@@ -143,7 +143,7 @@ export default class NetworkManager {
     // Shows different player projectiles.
     spawn_projectile(scene, otherPlayerBulletData, scaleX=1, scaleY=1) {
         let bullet = scene.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, 
-		"player_laser_shoot_1").setScale(scaleX, scaleY);        
+            "player_laser_shoot_1").setScale(scaleX, scaleY);        
         bullet.checkWorldBounds = true;
         bullet.outOfBoundsKill = true;
 
