@@ -49,16 +49,21 @@ export default class GameScene extends Phaser.Scene {
 
 		// First param: Name of tileset in Tiled, Second param: png load key.
 		const tileset = map.addTilesetImage("space-map", "tiles", 64, 64);
+
+        // Do we need this line?
 		const layer = map.createLayer("space_layer", tileset, 0, 0);
 
         // Set up camera
-		const mapWidth = map.tileWidth * map.width;
-		const mapHeight = map.tileHeight * map.height;
+		this.mapWidth = map.tileWidth * map.width;
+		this.mapHeight = map.tileHeight * map.height;
 
-        self.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
+        //self.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
+        self.cameras.main
+            .setBounds(0, 0, this.mapWidth, this.mapHeight)
+            .setName('main');
 
 		// World bounds
-        this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
+        this.physics.world.setBounds(0, 0, this.mapWidth, this.mapHeight);
 
         // Register text box
         this.textBoxManager.registerChatBox(this.socket);
@@ -73,6 +78,14 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
+        // Minimap init
+        this.minimap = this.cameras
+            .add(200, 10, 200, 100)
+            .setZoom(0.085)
+            .setName('minimap');
+        this.minimap.setBackgroundColor(0x002244);
+        this.minimap.scrollX = 1500;
+        this.minimap.scrollY = 0;
 
         // Emit to server to start the socket connection to server
         this.socket.emit('initializeSocketConnection', this.userName);
@@ -159,6 +172,14 @@ export default class GameScene extends Phaser.Scene {
 
             // TODO: Refactor - does this NEED to be in update loop?
             this.networkManager.checkForCollisions(this);
+            
+            const MINIMAP_LEFT_START_POSITION = 1100;
+            const MINIMAP_RIGHT_END_BOUNDARY = this.mapWidth - 1300;
+            const MINIMAP_TOP_START_POSITION = 550;
+            const MINIMAP_BOTTOM_END_BOUNDARY = this.mapHeight - 650;
+
+            this.minimap.scrollX = Phaser.Math.Clamp(this.networkManager.ship.x, MINIMAP_LEFT_START_POSITION, MINIMAP_RIGHT_END_BOUNDARY);
+            this.minimap.scrollY = Phaser.Math.Clamp(this.networkManager.ship.y, MINIMAP_TOP_START_POSITION, MINIMAP_BOTTOM_END_BOUNDARY);
         }
     }
 }
