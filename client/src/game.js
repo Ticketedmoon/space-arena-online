@@ -9,7 +9,7 @@ export default class Game {
             parent: 'phaser-canvas',
             width: 835,
             height: 600,
-            url: "https://online-space-game-by-shane.herokuapp.com/",
+            url: "https://space-arena-online.herokuapp.com/",
             version: "0.0.2",
             fps: 30,
             scale: {
@@ -18,7 +18,15 @@ export default class Game {
     
             // Physics
             physics: {
-                default: 'arcade',
+                default: 'matter',
+                matter: {
+                    debug: false,
+                    enableSleeping: true,
+                    gravity: {
+                        x: 0,
+                        y: 0
+                    }
+                },
                 arcade: {
                     debug: false,
                     gravity: { x: 0, y: 0 }
