@@ -10,9 +10,7 @@ export default class TextBoxManager {
     }
 
     // TODO: Can we combine the two methods below?
-
     registerChatBox(socket) {
-        let self = this;
         const textBox = document.getElementById("text-box");
         const textBoxWrapper = document.getElementsByClassName("text-box-div")[0];
         textBox.addEventListener("keydown", (event) => {

@@ -85,14 +85,12 @@ export default class NetworkManager {
 
             scene.physics.collide(this.ship.lasers, scene.asteroidsGroup, (asteroid, laser) => {
                 asteroid.tint = 0xff0000;
+                asteroid.body.setVelocity(0, 0);
                 laser.destroy();
-                setTimeout(function() {
+                setTimeout(() => {
+                    scene.socket.emit('asteroid_group_update', asteroid.id);
                     asteroid.destroy();
-                    // Notify server to remove asteroids from global pool for all players.
-                    // Since we have the asteroid obj here, we may need to update the server pool with each asteroid having
-                    // an `id` such that we know which to remove.
-                    // Potentially also update it to be a Map over an Array.
-                }, 10)
+                }, 250)
             }, null, this); 
 
             // Collision between ship regular lasers
@@ -103,7 +101,7 @@ export default class NetworkManager {
                 laser.destroy();
                 self.ship.incrementKillCount();
 
-                setTimeout(function() {
+                setTimeout(() => {
                     otherPlayer.clearTint();
                 }, 250)
             }, null, this);
@@ -135,7 +133,7 @@ export default class NetworkManager {
                 // Destroy bullet sprite for memory.
                 otherPlayerBullet.destroy();
 
-                setTimeout(function() {
+                setTimeout(() => {
                     // Delete user Interface
                     self.ship.deleteUserInterface();
                     // Destroy this.ship.entityText.

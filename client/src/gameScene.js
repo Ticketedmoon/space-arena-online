@@ -3,6 +3,8 @@ import ImageLoader from './imageLoader.js';
 import AnimationManager from './animationManager.js';
 import TextBoxManager from './text-box-manager.js';
 
+const TILE_SIZE = 64;
+
 export default class GameScene extends Phaser.Scene {
 
     constructor() {
@@ -33,6 +35,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
+        
         // Store this keyword for later callbacks.
         var self = this;
         
@@ -42,17 +45,18 @@ export default class GameScene extends Phaser.Scene {
 		// Map
 		const map = this.make.tilemap({
 			key: "map",
-			tileWidth: 64,
-			tilwHeight: 64
+			tileWidth: TILE_SIZE,
+    		tilwHeight: TILE_SIZE
 		})
-
-		// First param: Name of tileset in Tiled, Second param: png load key.
-		const tileset = map.addTilesetImage("space-map", "tiles", 64, 64);
-		const layer = map.createLayer("space_layer", tileset, 0, 0);
 
         // Set up camera
 		const mapWidth = map.tileWidth * map.width;
 		const mapHeight = map.tileHeight * map.height;
+        console.log(`mapW: ${mapWidth}, mapH: ${mapHeight}`);
+
+		// First param: Name of tileset in Tiled, Second param: png load key.
+		const tileset = map.addTilesetImage("space-map", "tiles", TILE_SIZE, TILE_SIZE);
+		map.createLayer("space_layer", tileset, 0, 0);
 
         self.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
 
@@ -116,7 +120,18 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        this.socket.on('asteroids', (asteroids) => {
+        this.socket.on('asteroids', (asteroids, last_removed_asteroid_id) => {
+            if (self.asteroidsGroup) {
+                let destroyedAsteroid = self.asteroidsGroup
+                    .getChildren()
+                    .find(asteroid => asteroid.id === last_removed_asteroid_id);
+                // TODO: Destroy laser here too
+                destroyedAsteroid.tint = 0xff0000;
+                destroyedAsteroid.body.setVelocity(0, 0);
+                setTimeout(() => {
+                    destroyedAsteroid.destroy();
+                }, 250)
+            }
             this.addAsteroidsToWorld(asteroids);
             self.physics.add.collider(self.networkManager.ship, this.asteroidsGroup);
         });
@@ -177,6 +192,7 @@ export default class GameScene extends Phaser.Scene {
             const direction = (Math.random() > 0.5) ? -1 : 1;
             asteroid.body.setVelocity(Phaser.Math.Between(1, 50) * direction, Phaser.Math.Between(1, 50) * direction);
             asteroid.body.setDrag(50, 50);
+            asteroid.id = asteroidProperties.id;
             this.asteroidsGroup.add(asteroid);
         })
         this.physics.add.collider(this.asteroidsGroup, this.asteroidsGroup);

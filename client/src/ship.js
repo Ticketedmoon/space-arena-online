@@ -25,6 +25,7 @@ export default class Ship extends Phaser.GameObjects.Sprite {
 
         // Enabling physics for this object is crucial + set world boundaries
         scene.physics.world.enable(this, Phaser.Physics.ARCADE);
+
         scene.add.existing(this).setOrigin(0.5, 0.5).setDisplaySize(this.shipWidth, this.shipHeight).play('launch');
 
         // Add text underneath sprite
