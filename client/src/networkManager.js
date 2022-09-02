@@ -83,6 +83,18 @@ export default class NetworkManager {
         if (this.ship) {
             let self = this;
 
+            scene.physics.collide(this.ship.lasers, scene.asteroidsGroup, (asteroid, laser) => {
+                asteroid.tint = 0xff0000;
+                laser.destroy();
+                setTimeout(function() {
+                    asteroid.destroy();
+                    // Notify server to remove asteroids from global pool for all players.
+                    // Since we have the asteroid obj here, we may need to update the server pool with each asteroid having
+                    // an `id` such that we know which to remove.
+                    // Potentially also update it to be a Map over an Array.
+                }, 10)
+            }, null, this); 
+
             // Collision between ship regular lasers
             scene.physics.collide(this.ship.lasers, scene.otherPlayers, (laser, otherPlayer) => {
                 otherPlayer.body.velocity.x = 0;
@@ -142,8 +154,9 @@ export default class NetworkManager {
     // Method is used for other player ships when shooting.
     // Shows different player projectiles.
     spawn_projectile(scene, otherPlayerBulletData, scaleX=1, scaleY=1) {
-        let bullet = scene.physics.add.sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, 
-            "player_laser_shoot_1").setScale(scaleX, scaleY);        
+        let bullet = scene.physics.add
+            .sprite(otherPlayerBulletData.x, otherPlayerBulletData.y, "player_laser_shoot_1")
+            .setScale(scaleX, scaleY);        
         bullet.checkWorldBounds = true;
         bullet.outOfBoundsKill = true;
 

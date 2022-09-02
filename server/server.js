@@ -14,6 +14,21 @@ var players = {};
 // Colours
 var colours = require('./colours');
 
+const { random } = require('./util');
+
+// Asteroids
+const TOTAL_ASTEROIDS = 32;
+
+const asteroids = Array(TOTAL_ASTEROIDS).fill().map(i => { 
+    // Find way to get mapW + mapH so not to require changes here each time map size changes.
+    return {
+        x: random(100, 2000),
+        y: random(100, 1900),
+        scale: 0.3 + (Math.random() / 0.5) * 0.5,
+        rotation: Math.random() * 35
+    }
+});
+
 console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
  
@@ -39,7 +54,6 @@ io.on('connection', function (socket) {
         colour: colours[0].random(),
         x: Math.floor(Math.random() * 700) + 50,
         y: Math.floor(Math.random() * 500) + 50,
-        team: (Math.random() > 0.5) ? 'red' : 'blue',
         thrustersActive: false
     };
 
@@ -48,6 +62,9 @@ io.on('connection', function (socket) {
 
         // Send all player data to the new player
         socket.emit('currentPlayers', players);
+
+        // Send all asteroid data to the new player
+        socket.emit('asteroids', asteroids)
 
         // Update all other players of the new player
         socket.broadcast.emit('newPlayer', socket.id, players[socket.id]);

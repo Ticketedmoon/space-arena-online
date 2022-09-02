@@ -39,7 +39,6 @@ export default class GameScene extends Phaser.Scene {
         // Setup socket for each client
         this.socket = io();
 
-
 		// Map
 		const map = this.make.tilemap({
 			key: "map",
@@ -73,36 +72,68 @@ export default class GameScene extends Phaser.Scene {
         // Lasers shot by players
         this.animationManager.initializeAnimationGroup(this);
 
+        // Update current players with new player details.
+        this.createSocketEventListeners(self);
+
+        // Initialize default ship cursor key inputs
+        this.createKeyboardInputListeners(self);
+    }
+
+    createKeyboardInputListeners(self) {
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        // Initialize Meteor Strike function @Letter keys with Phaser
+        this.input.keyboard.on('keydown', (event) => {
+            if (self.textBoxManager.isChatBoxOpen()) {
+                return;
+            } else {
+                let key = event.key.toLowerCase();
+                if (key == 'c') {
+                    self.networkManager.ship.fire_meteor_shot(self);
+                } else if (key == 'x') {
+                    self.networkManager.ship.fire_laser(self);
+                } else if (key == 'r') {
+                    self.networkManager.ship.reload();
+                }
+            }
+        });
+    }
+
+    createSocketEventListeners(self) {
 
         // Emit to server to start the socket connection to server
         this.socket.emit('initializeSocketConnection', this.userName);
 
-        // Update current players with new player details.
-        this.socket.on('currentPlayers', function(players) {
-            Object.keys(players).forEach(function (id) {
+        this.socket.on('currentPlayers', (players) => {
+            Object.keys(players).forEach((id) => {
                 if (players[id].playerId === self.socket.id) {
                     self.networkManager.addPlayer(self, id, players[id]);
                     self.cameras.main.startFollow(self.networkManager.ship);
-                }
-                else {
+                    self.physics.add.collider(self.networkManager.ship, self.asteroidsGroup);
+                } else {
                     self.networkManager.addOtherPlayer(self, id, players[id]);
                 }
             });
         });
 
+        this.socket.on('asteroids', (asteroids) => {
+            this.addAsteroidsToWorld(asteroids);
+            self.physics.add.collider(self.networkManager.ship, this.asteroidsGroup);
+        });
+
         // Update new player with all other current player details.
-        this.socket.on('newPlayer', function(id, playerInfo) {
+        this.socket.on('newPlayer', (id, playerInfo) => {
             self.networkManager.addOtherPlayer(self, id, playerInfo);
         });
 
         // Connect user to chat
-        this.socket.on('chatUpdate', function(message, colour, userName) {
+        this.socket.on('chatUpdate', (message, colour, userName) => {
             self.textBoxManager.updateChatLog(message, colour, userName);
         });
 
         // Remove player from otherPlayers group if disconnect.
-        this.socket.on('disconnect', function(playerId) {
-            self.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        this.socket.on('disconnect', (playerId) => {
+            self.otherPlayers.getChildren().forEach((otherPlayer) => {
                 if (playerId === otherPlayer.playerId) {
                     otherPlayer.destroy();
                     otherPlayer.entityText.destroy();
@@ -110,8 +141,8 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        this.socket.on('playerMoved', function (playerInfo) {
-            self.otherPlayers.getChildren().forEach(function (otherPlayer) {
+        this.socket.on('playerMoved', (playerInfo) => {
+            self.otherPlayers.getChildren().forEach((otherPlayer) => {
                 if (playerInfo.playerId === otherPlayer.playerId) {
                     otherPlayer.rotation = playerInfo.rotation;
                     otherPlayer.x = playerInfo.x;
@@ -123,32 +154,32 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        this.socket.on('bulletFired', function (bulletData) {
+        this.socket.on('bulletFired', (bulletData) => {
             self.networkManager.spawn_projectile(self, bulletData, 1, 1);
         });
 
-        this.socket.on('meteorFired', function (meteorData) {
+        this.socket.on('meteorFired', (meteorData) => {
             self.networkManager.spawn_projectile(self, meteorData, 3, 3);
         });
+    }
 
-        // Initialize default ship cursor key inputs
-        this.cursors = this.input.keyboard.createCursorKeys();
+    // TODO: Also make Asteroid it's own entity class + move logic there.
+    addAsteroidsToWorld(asteroids) {
+        this.asteroidsGroup = this.add.group();
+        asteroids.forEach((asteroidProperties) => {
+            let asteroid = this.physics.add.sprite(asteroidProperties.x, asteroidProperties.y, 'asteroid')
+                .setScale(asteroidProperties.scale, asteroidProperties.scale)
+                .setBounce(1, 1)
+                .setCollideWorldBounds(true);
 
-        // Initialize Meteor Strike function @Letter keys with Phaser
-        this.input.keyboard.on('keydown', function (event) {
-            if (self.textBoxManager.isChatBoxOpen()) {
-                return;
-            } else {
-		let key = event.key.toLowerCase();
-                if (key == 'c') {
-                    self.networkManager.ship.fire_meteor_shot(self);
-                } else if (key == 'x') {
-                    self.networkManager.ship.fire_laser(self);
-                } else if (key == 'r') {
-                    self.networkManager.ship.reload();
-                }
-            }
-        });
+            asteroid.body.setAngularVelocity(asteroidProperties.rotation);
+
+            const direction = (Math.random() > 0.5) ? -1 : 1;
+            asteroid.body.setVelocity(Phaser.Math.Between(1, 50) * direction, Phaser.Math.Between(1, 50) * direction);
+            asteroid.body.setDrag(50, 50);
+            this.asteroidsGroup.add(asteroid);
+        })
+        this.physics.add.collider(this.asteroidsGroup, this.asteroidsGroup);
     }
 
     update() {

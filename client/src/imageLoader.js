@@ -6,6 +6,12 @@ export default class ImageLoader {
         this.loadBoostAnimationImageSet(self);
         this.loadLaserImageSet(self);
         this.loadAmmoImageSet(self);
+        this.loadSpaceObjecets(self);
+    }
+
+    loadSpaceObjecets(self) {
+        self.load.path = 'assets/environment/';
+        self.load.image('asteroid', 'asteroids.png')
     }
     
     loadLaunchAnimationImageSet(self) {
