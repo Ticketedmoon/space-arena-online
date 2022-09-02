@@ -18,7 +18,7 @@ export default class Game {
     
             // Physics
             physics: {
-                default: 'matter',
+                default: 'arcade', // We want matter, but default to arcade until we can migrate.
                 matter: {
                     debug: false,
                     enableSleeping: true,
