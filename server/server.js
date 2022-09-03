@@ -20,19 +20,24 @@ const { random } = require('./util');
 const TOTAL_ASTEROIDS = 32;
 
 // Map
+// Find way to get mapW + mapH so not to require changes here each time map size changes.
 const MAP_W = 6400;
 const MAP_H = 1920;
 
-var asteroids = Array(TOTAL_ASTEROIDS).fill().map((_, index) => { 
-    // Find way to get mapW + mapH so not to require changes here each time map size changes.
-    return {
-        id: index,
-        x: random(100, MAP_W - 100),
-        y: random(100, MAP_H - 100),
-        scale: 0.3 + (Math.random() / 0.5) * 0.5,
-        rotation: Math.random() * 35
-    }
-});
+var asteroids = new Map(
+    Array(TOTAL_ASTEROIDS).fill().map((_, index) => { 
+        let asteroidProperties = {
+            id: index,
+            x: random(100, MAP_W - 100),
+            y: random(100, MAP_H - 100),
+            velocity: random(1, 50),
+            direction: Math.random() > 0.5 ? 1 : -1,
+            scale: 0.3 + (Math.random() / 0.5) * 0.5,
+            rotation: Math.random() * 35
+        }
+    return [index, asteroidProperties];
+    })
+);
 
 console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
@@ -69,7 +74,8 @@ io.on('connection', (socket) => {
         socket.emit('currentPlayers', players);
 
         // Send all asteroid data to the new player
-        socket.emit('asteroids', asteroids, null)
+        let asteroidsJson = JSON.stringify(Array.from(asteroids));
+        socket.emit('update_asteroids_on_map', asteroidsJson, null)
 
         // Update all other players of the new player
         socket.broadcast.emit('newPlayer', socket.id, players[socket.id]);
@@ -104,10 +110,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('asteroid_group_update', (asteroid_id_to_destroy) => {
-        asteroids = asteroids.filter((asteroid) => {
-            return asteroid.id !== asteroid_id_to_destroy
-        });
-        socket.broadcast.emit('asteroids', asteroids, asteroid_id_to_destroy);
+        let asteroidsJson = JSON.stringify(Array.from(asteroids));
+        socket.broadcast.emit('update_asteroids_on_map', asteroidsJson, asteroid_id_to_destroy);
     })
 
     socket.on('chatUpdate', (message, playerId) => {

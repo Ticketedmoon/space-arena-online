@@ -19,10 +19,10 @@ export default class GameScene extends Phaser.Scene {
         this.load.path = 'assets/maps/'
 
         // this.load.image('game-background-image', 'large-space-background.png')
-		// Load the PNG
-		this.load.image('tiles', 'space-map.png');
-		// load the JSON file
-		this.load.tilemapTiledJSON('map', 'space-map.json')
+        // Load the PNG
+        this.load.image('tiles', 'space-map.png');
+        // load the JSON file
+        this.load.tilemapTiledJSON('map', 'space-map.json')
 
         this.imageLoader = new ImageLoader();
         this.animationManager = new AnimationManager();
@@ -35,32 +35,32 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
-        
+
         // Store this keyword for later callbacks.
         var self = this;
-        
+
         // Setup socket for each client
         this.socket = io();
 
-		// Map
-		const map = this.make.tilemap({
-			key: "map",
-			tileWidth: TILE_SIZE,
-    		tilwHeight: TILE_SIZE
-		})
+        // Map
+        const map = this.make.tilemap({
+            key: "map",
+            tileWidth: TILE_SIZE,
+            tilwHeight: TILE_SIZE
+        })
 
         // Set up camera
-		const mapWidth = map.tileWidth * map.width;
-		const mapHeight = map.tileHeight * map.height;
+        const mapWidth = map.tileWidth * map.width;
+        const mapHeight = map.tileHeight * map.height;
         console.log(`mapW: ${mapWidth}, mapH: ${mapHeight}`);
 
-		// First param: Name of tileset in Tiled, Second param: png load key.
-		const tileset = map.addTilesetImage("space-map", "tiles", TILE_SIZE, TILE_SIZE);
-		map.createLayer("space_layer", tileset, 0, 0);
+        // First param: Name of tileset in Tiled, Second param: png load key.
+        const tileset = map.addTilesetImage("space-map", "tiles", TILE_SIZE, TILE_SIZE);
+        map.createLayer("space_layer", tileset, 0, 0);
 
         self.cameras.main.setBounds(0, 0, mapWidth, mapHeight);
 
-		// World bounds
+        // World bounds
         this.physics.world.setBounds(0, 0, mapWidth, mapHeight);
 
         // Register text box
@@ -120,20 +120,32 @@ export default class GameScene extends Phaser.Scene {
             });
         });
 
-        this.socket.on('asteroids', (asteroids, last_removed_asteroid_id) => {
-            if (self.asteroidsGroup) {
+        // BUGFIX: 
+        // Move deletion to separate socket listener.
+        // Then emit out server asteroid map update.
+        this.socket.on('update_asteroids_on_map', (asteroidsJson, last_removed_asteroid_id) => {
+            let self = this;
+            let asteroids = new Map(JSON.parse(asteroidsJson));
+            if (self.asteroidsGroup && last_removed_asteroid_id !== null) {
                 let destroyedAsteroid = self.asteroidsGroup
                     .getChildren()
                     .find(asteroid => asteroid.id === last_removed_asteroid_id);
-                // TODO: Destroy laser here too
-                destroyedAsteroid.tint = 0xff0000;
-                destroyedAsteroid.body.setVelocity(0, 0);
-                setTimeout(() => {
-                    destroyedAsteroid.destroy();
-                }, 250)
+                if (destroyedAsteroid) {
+                    // TODO: Destroy laser here too
+                    // TODO Centralise this logic with other destoy logic.
+                    destroyedAsteroid.tint = 0xff0000;
+                    destroyedAsteroid.body.setVelocity(0, 0);
+                    setTimeout(() => {
+                        asteroids.delete(destroyedAsteroid.id);
+                        destroyedAsteroid.destroy();
+                        this.addAsteroidsToWorld(asteroids);
+                        self.physics.add.collider(self.networkManager.ship, this.asteroidsGroup);
+                    }, 250);
+                }
+            } else {
+                this.addAsteroidsToWorld(asteroids);
+                self.physics.add.collider(self.networkManager.ship, this.asteroidsGroup);
             }
-            this.addAsteroidsToWorld(asteroids);
-            self.physics.add.collider(self.networkManager.ship, this.asteroidsGroup);
         });
 
         // Update new player with all other current player details.
@@ -181,17 +193,13 @@ export default class GameScene extends Phaser.Scene {
     // TODO: Also make Asteroid it's own entity class + move logic there.
     addAsteroidsToWorld(asteroids) {
         this.asteroidsGroup = this.add.group();
-        asteroids.forEach((asteroidProperties) => {
+        asteroids.forEach((asteroidProperties, _) => {
             let asteroid = this.physics.add.sprite(asteroidProperties.x, asteroidProperties.y, 'asteroid')
                 .setScale(asteroidProperties.scale, asteroidProperties.scale)
-                .setBounce(1, 1)
+                .setBounce(0, 0)
                 .setCollideWorldBounds(true);
-
             asteroid.body.setAngularVelocity(asteroidProperties.rotation);
-
-            const direction = (Math.random() > 0.5) ? -1 : 1;
-            asteroid.body.setVelocity(Phaser.Math.Between(1, 50) * direction, Phaser.Math.Between(1, 50) * direction);
-            asteroid.body.setDrag(50, 50);
+            asteroid.body.setVelocity(asteroidProperties.velocity, asteroidProperties.velocity);
             asteroid.id = asteroidProperties.id;
             this.asteroidsGroup.add(asteroid);
         })
