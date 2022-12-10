@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/ShaneCreedon/Space-Arena-Online#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "socket.io": "^2.4.0"
   }
 }
