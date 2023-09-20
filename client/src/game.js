@@ -10,7 +10,7 @@ export default class Game {
             width: 835,
             height: 600,
             url: "https://www.skybreak.app/sao/",
-            version: "0.0.2",
+            version: "0.0.3",
             fps: 30,
             scale: {
                 autoCenter: Phaser.Scale.CENTER_HORIZONTALLY

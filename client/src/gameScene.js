@@ -40,7 +40,11 @@ export default class GameScene extends Phaser.Scene {
         var self = this;
 
         // Setup socket for each client
-        this.socket = io();
+        const socketRootUrl = window.location.pathname;
+        this.socket = io({
+            path: `${socketRootUrl}socket.io`,
+        });
+
 
         // Map
         const map = this.make.tilemap({

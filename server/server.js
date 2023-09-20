@@ -1,12 +1,28 @@
 // Import Express and instantiate
+var fs = require('fs');
 var express = require('express');
 var app = express();
 
+// SSL config here
+const PRIVATE_KEY_PATH = null;
+const SSL_CERT_PATH = null;
+
+var privateKey = PRIVATE_KEY_PATH === null ? null : fs.readFileSync(PRIVATE_KEY_PATH, 'utf8');
+var certificate = SSL_CERT_PATH === null ? null : fs.readFileSync(SSL_CERT_PATH, 'utf8');
+var intermediate = SSL_CERT_PATH === null ? null : fs.readFileSync(SSL_CERT_PATH, 'utf8');
+
+var ssl_options = {
+    key: privateKey,
+    cert: certificate,
+    ca: intermediate
+}
+
+
 // Import http-server and associate it with express object
-var server = require('http').Server(app);
+var server = require('http').createServer(ssl_options, app);
 
 // Import socket.io and associate it with the server to listen.
-var io = require('socket.io').listen(server);
+var io = require('socket.io')(server);
 
 // Current online players
 var players = {};
@@ -43,12 +59,14 @@ console.log("Loading Client data from: " + process.cwd() + "\\client")
 app.use(express.static(process.cwd() + '/client'));
  
 // Root
-app.get('/', (req, res) => {
+const ROOT_PATH = '/';
+
+app.get(ROOT_PATH, (req, res) => {
   res.sendFile(process.cwd() + '/client/index.html');
 });
 
 // Return info
-app.get('/information', (req, res) => {
+app.get(ROOT_PATH + 'information', (req, res) => {
     res.sendFile(process.cwd() + '/client/info.html');
 });
 
