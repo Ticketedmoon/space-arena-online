@@ -9,7 +9,7 @@ export default class Game {
             parent: 'phaser-canvas',
             width: 835,
             height: 600,
-            url: "https://space-arena-online.herokuapp.com/",
+            url: "https://www.skybreak.app/sao/",
             version: "0.0.2",
             fps: 30,
             scale: {
