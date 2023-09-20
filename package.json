@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ShaneCreedon/Space-Arena-Online#readme",
   "dependencies": {
+    "dotenv": "^16.3.1",
     "express": "^4.17.1",
     "socket.io": "^2.4.0"
   }

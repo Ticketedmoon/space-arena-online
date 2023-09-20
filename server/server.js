@@ -4,17 +4,18 @@ var express = require('express');
 var app = express();
 
 // SSL config here
-const PRIVATE_KEY_PATH = null;
-const SSL_CERT_PATH = null;
+require("dotenv").config();
 
-var privateKey = PRIVATE_KEY_PATH === null ? null : fs.readFileSync(PRIVATE_KEY_PATH, 'utf8');
-var certificate = SSL_CERT_PATH === null ? null : fs.readFileSync(SSL_CERT_PATH, 'utf8');
-var intermediate = SSL_CERT_PATH === null ? null : fs.readFileSync(SSL_CERT_PATH, 'utf8');
+const privateKeyPath = process.env['PRIVATE_KEY_PATH'];
+const sslCertPath = process.env['SSL_CERT_PATH'];
+
+var privateKey = privateKeyPath === null || privateKeyPath.length == 0 ? null : fs.readFileSync(privateKeyPath, 'utf8');
+var certificate = sslCertPath === null || sslCertPath.length == 0 ? null : fs.readFileSync(sslCertPath, 'utf8');
 
 var ssl_options = {
     key: privateKey,
     cert: certificate,
-    ca: intermediate
+    ca: certificate
 }
 
 
